@@ -1,0 +1,55 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "shortest-distance-intermediate-nodes-compute.shader",
+    "Dispatch": [13, 1, 1],
+    "Attachments": [
+        {
+            "Name" : "Intermediate Nodes",
+            "Type": "BufferInputOutput",
+            "ParentJobName": "Initialize Intermediate Nodes Compute",
+            "Size": 1048576
+        },
+        {
+            "Name" : "Leaf Nodes",
+            "Type": "BufferInputOutput",
+            "ParentJobName": "Initialize Intermediate Nodes Compute",
+            "Size": 1048576
+        },
+        {
+            "Name" : "Shortest Distance Results",
+            "Type": "BufferOutput",
+            "ParentJobName": "This",
+            "Size": 1048576
+        },
+        {
+            "Name" : "BVH Process Info",
+            "Type": "BufferInputOutput",
+            "ParentJobName": "Initialize Intermediate Nodes Compute",
+            "Size": 256
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "positions",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "triangles",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "meshInfoList",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        }
+    ]
+}

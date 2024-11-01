@@ -1,0 +1,34 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "merge-intermediate-nodes.shader",
+    "Dispatch": [13, 1, 1],
+    "Attachments": [
+        {
+            "Name" : "Temp Intermediate Nodes",
+            "Type": "BufferOutput",
+            "ParentJobName": "This",
+            "Size": 1048576
+        },
+        {
+            "Name" : "Intermediate Nodes",
+            "Type": "BufferInput",
+            "ParentJobName": "Initialize Intermediate Nodes Compute",
+            "Size": 1048576
+        },
+        {
+            "Name" : "Shortest Distance Results",
+            "Type": "BufferInput",
+            "ParentJobName": "Shortest Distance Intermediate Nodes Compute",
+            "Size": 1048576
+        },
+        {
+            "Name" : "BVH Process Info",
+            "Type": "BufferInput",
+            "ParentJobName": "Initialize Intermediate Nodes Compute",
+            "Size": 256
+        }
+    ],
+    "ShaderResources": [
+    ]
+}

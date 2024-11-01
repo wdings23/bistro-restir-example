@@ -1,0 +1,62 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "simple-denoiser-graphics.shader",
+    "Attachments": [
+        {
+            "Name" : "Denoised Indirect Diffuse Radiance Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        
+        {
+            "Name" : "World Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name" : "Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name": "Indirect Diffuse Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Accumulation Graphics"
+        },
+        {
+            "Name" : "Ambient Occlusion Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Graphics"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 4096,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        }    
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

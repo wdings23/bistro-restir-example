@@ -1,0 +1,71 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "skinning-compute.shader",
+    "Attachments": [
+        {
+            "Name" : "Skinned Vertices",
+            "Type": "BufferOutput",
+            "ShaderResourceName": "xformVertices",
+            "ParentJobName": "This",
+            "Size": 1048576,
+            "Usage": "Vertex"
+        },
+        {
+            "Name": "Skinned Vertex Positions",
+            "Type": "BufferOutput",
+            "ShaderResourceName": "xformPositions",
+            "ParentJobName": "This",
+            "Size": 1048576
+        },
+        {
+            "Name": "Bounding Boxes",
+            "Type": "BufferOutput",
+            "Size": 2048
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "compute",
+            "usage": "uniform"
+        },
+        { 
+            "name" : "vertices",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "vertexWeights",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "skinningMatrices",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "meshVertexRanges",
+            "type" : "buffer",
+            "size" : 2048,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "normalMatrices",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        }
+    ]
+}

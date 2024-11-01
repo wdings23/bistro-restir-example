@@ -1,0 +1,47 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "static-scene-brick-setup-compute.shader",
+    "Attachments": [
+        {
+            "Name": "Bricks",
+            "Type": "BufferOutput",
+            "Size": 1048576
+        },
+        {
+            "Name": "Brixels",
+            "Type": "BufferOutput",
+            "Size": 67108864
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "compute",
+            "usage": "uniform"
+        },
+        {
+            "name": "mesh brick starting positions",
+            "type": "buffer",
+            "shader_stage": "compute",
+            "usage": "read_only_storage",
+            "size": 65536
+        },
+        {
+            "name": "mesh brick bounding box dimensions",
+            "type": "buffer",
+            "shader_stage": "compute",
+            "usage": "read_only_storage",
+            "size": 65536
+        },
+        {
+            "name": "mesh brick ranges",
+            "type": "buffer",
+            "shader_stage": "compute",
+            "usage": "read_only_storage",
+            "size": 65536
+        }
+    ]
+}

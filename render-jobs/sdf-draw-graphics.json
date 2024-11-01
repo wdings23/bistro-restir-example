@@ -1,0 +1,95 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "sdf-draw-graphics.shader",
+    "Attachments": [
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Position Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Volumetric Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Debug Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        
+        {
+            "Name" : "Brixel Distances",
+            "Type": "BufferInput",
+            "ParentJobName": "Brick Setup Compute"
+        },
+        {
+            "Name" : "Brixel Radiance",
+            "Type": "BufferInput",
+            "ParentJobName": "Screen Space Brixel Radiance Compute"
+        },
+        {
+            "Name" : "Brick To Brixel Mapping",
+            "Type": "BufferInput",
+            "ParentJobName": "Brick Setup Compute"
+        },
+        {
+            "Name": "Bounding Boxes",
+            "Type": "BufferInput",
+            "ParentJobName": "Skinning Compute"
+        },
+        {
+            "Name" : "Bricks",
+            "Type": "BufferInput",
+            "ParentJobName": "Brick Setup Compute"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        }
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

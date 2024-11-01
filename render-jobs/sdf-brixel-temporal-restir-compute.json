@@ -1,0 +1,106 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "sdf-brixel-temporal-restir-compute.shader",
+    "Attachments": [
+        {
+            "Name" : "Brixel Radiance",
+            "Type": "BufferOutput",
+            "Size": 16777216
+        },
+        {
+            "Name" : "Brixel Reservoirs",
+            "Type": "BufferOutput",
+            "Size": 16777216
+        },
+        {
+            "Name" : "Brixel Distances",
+            "Type": "BufferInput",
+            "ParentJobName": "Brixel Barycentric Coordinates"
+        },
+        {
+            "Name" : "Brixel Barycentric Coordinates",
+            "Type": "BufferInput",
+            "ParentJobName": "Brixel Barycentric Coordinates"
+        },
+        {
+            "Name" : "Brick To Brixel Mapping",
+            "Type": "BufferInput",
+            "ParentJobName": "Flood Fill Compute"
+        },
+        {
+            "Name": "Hit Brick Queue",
+            "Type": "BufferInput",
+            "ParentJobName": "SDF Ambient Occlusion Graphics"
+        },
+        {
+            "Name": "Hit Brick Counters",
+            "Type": "BufferInput",
+            "ParentJobName": "SDF Ambient Occlusion Graphics"
+        },
+        {
+            "Name": "Skinned Vertex Positions",
+            "Type": "BufferInput",
+            "ParentJobName": "Skinning Compute"
+        },
+        {
+            "Name": "Bounding Boxes",
+            "Type": "BufferInput",
+            "ParentJobName": "Skinning Compute"
+        },
+        {
+            "Name" : "Sky Output",
+            "ParentJobName": "Atmosphere Graphics",
+            "Type": "TextureInput"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        },
+        {
+            "name": "triangleIndices",
+            "type": "buffer",
+            "size": 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        {
+            "name": "blue noise texture",
+            "type": "texture2d",
+            "shader_stage": "compute",
+            "format": "rgb8unorm",
+            "usage": "uniform",
+            "file_path": "D:\\projects\\free-blue-noise-textures\\512_512\\LDR_RGB1_0.png"
+        },
+        { 
+            "name" : "dynamic bvh nodes",
+            "type" : "buffer",
+            "shader_stage" : "compute",
+            "usage": "read_only_storage",
+            "parent_job": "Temporal Restir Graphics"
+        }
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

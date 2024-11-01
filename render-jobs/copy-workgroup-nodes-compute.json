@@ -1,0 +1,31 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "copy-workgroup-nodes-compute.shader",
+    "Dispatch": [13, 1, 1],
+    "Attachments": [
+        {
+            "Name" : "Intermediate Nodes",
+            "Type": "BufferInputOutput",
+            "ParentJobName": "Initialize Intermediate Nodes Compute",
+            "Size": 1048576
+        },
+        {
+            "Name" : "Workgroup Intermediate Nodes",
+            "Type": "BufferInput",
+            "ParentJobName": "Truncate Workgroup Intermediate Nodes Compute"
+        },
+        {
+            "Name" : "Truncation Result",
+            "Type": "BufferInput",
+            "ParentJobName": "Truncate Workgroup Intermediate Nodes Compute"
+        },
+        {
+            "Name" : "BVH Process Info",
+            "Type": "BufferInput",
+            "ParentJobName": "Initialize Intermediate Nodes Compute"
+        }
+    ],
+    "ShaderResources": [
+    ]
+}

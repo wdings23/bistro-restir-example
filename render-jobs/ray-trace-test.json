@@ -1,0 +1,64 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "ray-trace-test.shader",
+    "Attachments": [
+        {
+            "Name" : "World Position Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name": "BVH Nodes",
+            "ParentJobName": "Build BVH Compute",
+            "ShaderResourceName": "nodeList",
+            "Type": "BufferInput"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "positions",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "fragment",
+            "usage": "read_only_storage",
+            "parent_job": "Build BVH Compute"
+        },
+        { 
+            "name" : "triangles",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "fragment",
+            "usage": "read_only_storage",
+            "parent_job": "Build BVH Compute"
+        },
+        { 
+            "name" : "triangleIndices",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "fragment",
+            "usage": "read_only_storage",
+            "parent_job": "Build BVH Compute"
+        }    
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

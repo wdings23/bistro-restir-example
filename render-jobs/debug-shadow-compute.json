@@ -1,0 +1,117 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "debug-shadow-compute.shader",
+    "Dispatch": [40, 30, 1],
+    "Attachments": [
+        {
+            "Name" : "Shadow Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        },
+
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Light View Graphics 0"
+        },
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Light View Graphics 1"
+        },
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Light View Graphics 2"
+        },
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Light View Graphics 3"
+        },
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Light View Graphics 4"
+        },
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Light View Graphics 5"
+        },
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Light View Graphics 6"
+        },
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Light View Graphics 7"
+        },
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Light View Graphics 8"
+        },
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Light View Graphics 9"
+        },
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Light View Graphics 10"
+        },
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Light View Graphics 11"
+        },
+        {
+            "Name": "Visible Tiles",
+            "Type": "BufferOutput",
+            "Size": 4096,
+            "Usage": "Compute"
+        },
+        {
+            "Name": "Counters",
+            "Type": "BufferOutput",
+            "Size": 1024,
+            "Usage": "Compute"
+        },
+        {
+            "Name": "Tile Page Info",
+            "Type": "BufferOutput",
+            "Size": 1048576,
+            "Usage": "Compute"
+        },
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Close Up Light View Graphics"
+        },
+        {
+            "Name" : "Camera Matrices",
+            "Type": "BufferInput",
+            "ParentJobName": "Close Up Light View Compute"
+        }
+
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 4096,
+            "shader_stage" : "compute",
+            "usage": "uniform"
+        }
+    ]
+}

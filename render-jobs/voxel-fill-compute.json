@@ -1,0 +1,48 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "voxel-fill-compute.shader",
+    "Attachments": [
+        {
+            "Name" : "Brixels",
+            "Type": "BufferInputOutput",
+            "ParentJobName": "Brick Setup Compute"
+        },
+        {
+            "Name" : "Bricks",
+            "Type": "BufferInput",
+            "ParentJobName": "Brick Setup Compute"
+        },
+        {
+            "Name": "Bounding Boxes",
+            "Type": "BufferInput",
+            "ParentJobName": "Skinning Compute"
+        },
+        {
+            "Name": "Skinned Vertex Positions",
+            "Type": "BufferInput",
+            "ParentJobName": "Skinning Compute"
+        },
+        {
+            "Name": "Debug Buffer",
+            "Type": "BufferOutput",
+            "Size": 1048576
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "compute",
+            "usage": "uniform"
+        },
+        {
+            "name": "triangleIndices",
+            "type": "buffer",
+            "size": 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        }
+    ]
+}

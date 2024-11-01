@@ -1,0 +1,115 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "bistro-irradiance-cache-compute.shader",
+    "Dispatch": [4, 4, 1],
+    "Attachments": [
+        {
+            "Name" : "Irradiance Cache",
+            "Type": "BufferOutput",
+            "ShaderResourceName": "irradianceCache",
+            "ParentJobName": "This",
+            "Size": 8388608
+        },
+        {
+            "Name" : "Irradiance Cache Queue",
+            "Type": "BufferOutput",
+            "ShaderResourceName": "irradianceCacheQueue",
+            "ParentJobName": "This",
+            "Size": 1048576
+        },
+        {
+            "Name" : "Counters",
+            "Type": "BufferOutput",
+            "ShaderResourceName": "irradianceCacheQueue",
+            "ParentJobName": "This",
+            "Size": 256
+        },
+
+        {
+            "Name" : "Sky Output",
+            "ParentJobName": "Atmosphere Graphics",
+            "Type": "TextureInput"
+        },
+        {
+            "Name" : "World Position Output",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics",
+            "Type": "TextureInput"
+        },
+        {
+            "Name": "Hit Position Output",
+            "ParentJobName": "Temporal Restir Graphics",
+            "Type": "TextureInput"
+        },
+        {
+            "Name": "Hit Normal Output",
+            "ParentJobName": "Temporal Restir Graphics",
+            "Type": "TextureInput"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "compute",
+            "usage": "uniform"
+        },
+        { 
+            "name" : "TLAS Nodes",
+            "type" : "buffer",
+            "shader_stage" : "compute",
+            "usage": "read_only_storage",
+            "size" : 4000000
+        },
+        { 
+            "name" : "BLAS Nodes 0",
+            "type" : "buffer",
+            "shader_stage" : "compute",
+            "usage": "read_only_storage",
+            "size" : 200000000
+        },
+        { 
+            "name" : "BLAS Nodes 1",
+            "type" : "buffer",
+            "shader_stage" : "compute",
+            "usage": "read_only_storage",
+            "size" : 200000000
+        },
+        { 
+            "name" : "BLAS Node Indices",
+            "type" : "buffer",
+            "shader_stage" : "compute",
+            "usage": "read_only_storage",
+            "size" : 1048576
+        },
+        { 
+            "name" : "Vertex Buffer",
+            "type" : "buffer",
+            "shader_stage" : "compute",
+            "usage": "read_only_storage",
+            "size" : 140000000
+        },
+        { 
+            "name" : "Index Buffer",
+            "type" : "buffer",
+            "shader_stage" : "all",
+            "usage": "read_only_storage",
+            "size" : 40000000
+        },
+        {
+            "name": "materials",
+            "type": "buffer",
+            "size": 1048576,
+            "shader_stage": "all",
+            "usage": "read_only_storage"
+        },
+        {
+            "name": "meshMaterialIDs",
+            "type": "buffer",
+            "size": 1048576,
+            "shader_stage": "all",
+            "usage": "read_only_storage"
+        }
+    ]
+}

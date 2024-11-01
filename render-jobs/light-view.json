@@ -1,0 +1,59 @@
+{
+    "Type": "Graphics",
+    "PassType": "Mesh Graphics",
+    "Shader": "light-view.shader",
+    "Attachments": [
+        {
+            "Name" : "World Position Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ImageWidth": 4096,
+            "ImageHeight": 4096
+        },
+        {
+            "Name": "Visible Tiles",
+            "Type": "BufferInput",
+            "ParentJobName": "Light View Compute"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "localData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "all",
+            "usage": "uniform",
+            "resource_data": 
+            [
+                {
+                    "data": 0,
+                    "offset": 200
+                }
+            ]
+        }
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "True",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "Back",
+        "FrontFace": "CounterClockwise"
+    },
+    "VertexFormat":
+    [
+        "Vec4",
+        "Vec4",
+        "Vec4"
+    ]
+}

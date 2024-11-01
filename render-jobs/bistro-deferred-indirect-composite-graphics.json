@@ -1,0 +1,94 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "bistro-deferred-indirect-composite-graphics.shader",
+    "Attachments": [
+        {
+            "Name" : "Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Debug Output 0",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Debug Output 1",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Debug Output 2",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+
+        {
+            "Name": "Filtered Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Diffuse Filter Graphics"
+        },
+        {
+            "Name" : "Ambient Occlusion Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Graphics"
+        },
+        {
+            "Name" : "Direct Sun Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Accumulation Graphics"
+        },
+        {
+            "Name" : "Material Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+        },
+        {
+            "Name" : "Roughness Metalness Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+        },
+        {
+            "Name" : "Filtered Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Specular Filter Graphics"
+        }
+        
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        }
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

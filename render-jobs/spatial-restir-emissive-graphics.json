@@ -1,0 +1,146 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "spatial-restir-emissive-graphics.shader",
+    "Attachments": [
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Reservoir Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Ray Direction Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name": "Hit Position Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name": "Hit Normal Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+
+        {
+            "Name" : "World Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name" : "Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name" : "Texture Coordinate Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        
+        {
+            "Name": "Emissive Reservoir Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Emissive Graphics"
+        },
+        {
+            "Name": "Emissive Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Emissive Graphics"
+        },
+        {
+            "Name": "Emissive Hit Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Emissive Graphics"
+        },
+        {
+            "Name": "Emissive Hit Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Emissive Graphics"
+        },
+        {
+            "Name": "Previous Emissive Spatial Reservoir Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous Emissive Spatial Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous Emissive Spatial Hit Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous Emissive Spatial Hit Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous World Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Motion Vector Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name": "Previous Motion Vector Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        }    
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

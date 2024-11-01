@@ -1,0 +1,57 @@
+{
+    "Type": "Graphics",
+    "PassType": "Mesh Graphics",
+    "Shader": "debug-light-view.shader",
+    "Attachments": [
+        {
+            "Name" : "Debug Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        },
+        {
+            "Name" : "World Position",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "localData",
+            "type" : "buffer",
+            "size" : 4096,
+            "shader_stage" : "all",
+            "usage": "uniform",
+            "resource_data": 
+            [
+                {
+                    "data": 0,
+                    "offset": 200
+                }
+            ]
+        }
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "True",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "Back",
+        "FrontFace": "CounterClockwise"
+    },
+    "VertexFormat":
+    [
+        "Vec4",
+        "Vec4",
+        "Vec4"
+    ]
+}

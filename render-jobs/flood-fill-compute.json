@@ -1,0 +1,53 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "flood-fill-compute-2.shader",
+    "Attachments": [
+        {
+            "Name" : "Brixel Distances",
+            "Type": "BufferInputOutput",
+            "ParentJobName": "Brick Setup Compute"
+        },
+        {
+            "Name" : "Brixel Barycentric Coordinates",
+            "Type": "BufferInputOutput",
+            "ParentJobName": "Brick Setup Compute"
+        },
+
+        
+        {
+            "Name" : "Bricks",
+            "Type": "BufferInput",
+            "ParentJobName": "Brick Setup Compute"
+        },
+        {
+            "Name" : "Brixels",
+            "Type": "BufferInput",
+            "ParentJobName": "Brick Setup Compute"
+        },
+        {
+            "Name": "Bounding Boxes",
+            "Type": "BufferInput",
+            "ParentJobName": "Skinning Compute"
+        },
+        {
+            "Name": "Brick To Brixel Mapping",
+            "Type": "BufferInputOutput",
+            "ParentJobName": "Brick Setup Compute"
+        },
+        {
+            "Name" : "Counters",
+            "Type": "BufferOutput",
+            "Size": 1024
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "compute",
+            "usage": "uniform"
+        }
+    ]
+}

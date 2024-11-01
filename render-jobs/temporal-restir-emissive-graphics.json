@@ -1,0 +1,164 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "temporal-restir-emissive-graphics.shader",
+    "Attachments": [
+        {
+            "Name" : "Emissive Radiance Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Emissive Reservoir Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Emissive Hit Position Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Emissive Hit Normal Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+
+
+        {
+            "Name" : "World Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name" : "Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+
+
+        {
+            "Name": "Previous Temporal Restir Emissive Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous Temporal Restir Emissive Reservoir Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+
+        
+        {
+            "Name": "Sample Ray Direction Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Graphics"
+        },
+        {
+            "Name": "Sample Ray Hit Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Graphics"
+        },
+        {
+            "Name": "Previous Temporal Restir Emissive Hit Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous Temporal Restir Emissive Hit Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous World Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Motion Vector Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name": "Previous Motion Vector Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        }
+        
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 2048,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        },
+        { 
+            "name" : "materialData",
+            "type" : "buffer",
+            "size" : 65536,
+            "shader_stage" : "all",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "meshTriangleRangeData",
+            "type" : "buffer",
+            "size" : 65536,
+            "shader_stage" : "all",
+            "usage": "read_only_storage"
+        },
+        {
+            "name": "dynamic bvh nodes",
+            "type": "buffer",
+            "shader_stage": "fragment",
+            "usage": "read_only_storage",
+            "size": 8000000
+        },
+        {
+            "name": "dynamic vertex positions",
+            "type": "buffer",
+            "shader_stage": "fragment",
+            "usage": "read_only_storage",
+            "size": 5000000
+        },
+        {
+            "name": "dynamic triangle indices",
+            "type": "buffer",
+            "shader_stage": "fragment",
+            "usage": "read_only_storage",
+            "size": 5000000
+        }    
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

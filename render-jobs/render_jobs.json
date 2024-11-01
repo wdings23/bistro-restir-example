@@ -1,0 +1,691 @@
+{
+    "Jobs": 
+    [
+        {
+            "Name": "Mesh Culling Compute",
+            "Pipeline": "mesh-culling-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Dispatch": [1, 1, 1]
+        },
+        {
+            "Name": "Light Mesh Culling Compute 0",
+            "Pipeline": "light-mesh-culling-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Dispatch": [1, 1, 1]
+        },
+        {
+            "Name": "Light Mesh Culling Compute 1",
+            "Pipeline": "light-mesh-culling-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Dispatch": [1, 1, 1]
+        },
+        {
+            "Name": "Light Mesh Culling Compute 2",
+            "Pipeline": "light-mesh-culling-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Dispatch": [1, 1, 1]
+        },
+
+        {
+            "Name": "Skinning Compute",
+            "Pipeline": "skinning-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Dispatch": [16, 1, 1]
+        },
+        {
+            "Name": "Brick Setup Compute",
+            "Pipeline": "brick-setup-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Dispatch": [1, 1, 1],
+            "Enabled": "False"
+        },
+        {
+            "Name": "Voxelize Compute",
+            "Pipeline": "voxelize-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Dispatch": [32, 1, 1],
+            "Enabled": "False"
+        },
+        {
+            "Name": "Voxel Fill Compute",
+            "Pipeline": "voxel-fill-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Dispatch": [1, 1, 1],
+            "Enabled": "False"
+        },
+        {
+            "Name": "Flood Fill Compute",
+            "Pipeline": "flood-fill-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Dispatch": [16, 15, 6],
+            "Enabled": "False"
+        },
+        {
+            "Name": "Close Up Light View Compute",
+            "Pipeline": "close-up-light-view-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute"
+        },
+        {
+            "Name": "Close Up Light View Graphics",
+            "Pipeline": "close-up-light-view-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics"
+        },
+        {
+            "Name": "Character Shadow Graphics",
+            "Pipeline": "character-shadow-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Atmosphere Graphics",
+            "Pipeline": "atmosphere.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        
+
+        {
+            "Name": "Simple Offscreen Graphics",
+            "Pipeline": "simple.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics"
+        },
+        {
+            "Name": "Deferred Offscreen Graphics",
+            "Pipeline": "deferred.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics"
+        },
+
+        {
+            "Name": "Diffuse Atmosphere Graphics",
+            "Pipeline": "diffuse-atmosphere.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Deferred Indirect Offscreen Graphics",
+            "Pipeline": "deferred-indirect.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics"
+        },
+        {
+            "Name": "Light Deferred Indirect Offscreen Graphics 0",
+            "Pipeline": "light-deferred-indirect-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics"
+        },
+        {
+            "Name": "Light Deferred Indirect Offscreen Graphics 1",
+            "Pipeline": "light-deferred-indirect-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics"
+        },
+        {
+            "Name": "Light Deferred Indirect Offscreen Graphics 2",
+            "Pipeline": "light-deferred-indirect-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics"
+        },
+        {
+            "Name": "Texture Gather Depth Graphics",
+            "Pipeline": "texture-gather-depth-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 0 Graphics",
+            "Pipeline": "down-rez-depth-0-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 1 Graphics",
+            "Pipeline": "down-rez-depth-1-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 2 Graphics",
+            "Pipeline": "down-rez-depth-2-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 3 Graphics",
+            "Pipeline": "down-rez-depth-3-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 4 Graphics",
+            "Pipeline": "down-rez-depth-4-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 5 Graphics",
+            "Pipeline": "down-rez-depth-5-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 6 Graphics",
+            "Pipeline": "down-rez-depth-6-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 7 Graphics",
+            "Pipeline": "down-rez-depth-7-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 8 Graphics",
+            "Pipeline": "down-rez-depth-8-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+
+        {
+            "Name": "Secondary Mesh Culling Compute",
+            "Pipeline": "secondary-mesh-culling-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Dispatch": [1, 1, 1]
+        },
+        {
+            "Name": "Secondary Deferred Indirect Offscreen Graphics",
+            "Pipeline": "secondary-deferred-indirect-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics"
+        },
+
+        {
+            "Name": "Deferred Indirect Offscreen Lighting Graphics",
+            "Pipeline": "deferred-indirect-lighting-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Screen Space Visibility Bitmask Ambient Occlusion Indirect Graphics",
+            "Pipeline": "screen-space-visibility-bitmask-ambient-occlusion-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Deferred Indirect Offscreen Composite Graphics",
+            "Pipeline": "deferred-indirect-composite-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "TAA Indirect Resolve Graphics",
+            "Pipeline": "taa-indirect-resolve-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+
+        {
+            "Name": "Debug Light View",
+            "Pipeline": "debug-light-view.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Light View Compute",
+            "Pipeline": "light-view-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Light View Graphics 0",
+            "Pipeline": "light-view.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Light View Graphics 1",
+            "Pipeline": "light-view.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Light View Graphics 2",
+            "Pipeline": "light-view.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Light View Graphics 3",
+            "Pipeline": "light-view.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics",
+            "Enabled": "False"
+        },
+
+        {
+            "Name": "Light View Graphics 4",
+            "Pipeline": "light-view.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Light View Graphics 5",
+            "Pipeline": "light-view.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Light View Graphics 6",
+            "Pipeline": "light-view.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Light View Graphics 7",
+            "Pipeline": "light-view.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics",
+            "Enabled": "False"
+        },
+
+        {
+            "Name": "Light View Graphics 8",
+            "Pipeline": "light-view.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Light View Graphics 9",
+            "Pipeline": "light-view.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Light View Graphics 10",
+            "Pipeline": "light-view.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Light View Graphics 11",
+            "Pipeline": "light-view.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics",
+            "Enabled": "False"
+        },
+
+
+        {
+            "Name": "TLAS Test Graphics",
+            "Pipeline": "tlas-test.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+
+        {
+            "Name": "Debug Shadow Compute",
+            "Pipeline": "debug-shadow-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Enabled": "False"
+        },
+        { 
+            "Name": "Build Irradiance Cache Compute",
+            "Pipeline": "build-irradiance-cache.json",
+            "Type": "Compute",
+            "PassType": "Compute"
+        },
+        {
+            "Name": "Temporal Restir Graphics",
+            "Pipeline": "temporal-restir-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+
+        {
+            "Name": "SDF Ambient Occlusion Graphics",
+            "Pipeline": "sdf-ambient-occlusion-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Screen Space Brixel Radiance Compute",
+            "Pipeline": "screen-space-brixel-radiance-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Dispatch": [1, 1, 1],
+            "Enabled": "False"
+        },
+        {
+            "Name": "Brixel Indirect Radiance Graphics",
+            "Pipeline": "brixel-indirect-radiance-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Bicubic Filter SDF Ambient Occlusion Graphics",
+            "Pipeline": "bicubic-filter-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Enabled": "False"
+        },
+        {
+            "Name": "SDF Temporal Accumulation Graphics",
+            "Pipeline": "sdf-temporal-accumulation-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Enabled": "False"
+        },
+        {
+            "Name": "SDF Filter Graphics",
+            "Pipeline": "sdf-filter-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Enabled": "False"
+        },
+        {
+            "Name": "SDF Draw Graphics",
+            "Pipeline": "sdf-draw-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Enabled": "False"
+        },
+        
+
+        {
+            "Name": "Temporal Restir Emissive Graphics",
+            "Pipeline": "temporal-restir-emissive-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Temporal Restir Direct Graphics",
+            "Pipeline": "temporal-restir-direct-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Spatial Restir Graphics 0",
+            "Pipeline": "spatial-restir-graphics-0.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Spatial Restir Graphics 1",
+            "Pipeline": "spatial-restir-graphics-1.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Spatial Restir Emissive Graphics",
+            "Pipeline": "spatial-restir-emissive-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+
+        {
+            "Name": "Screen Space Visibility Bitmask Graphics",
+            "Pipeline": "screen-space-visibility-bitmask-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+
+        {
+            "Name": "MIP Map 0 Graphics",
+            "Pipeline": "mip-map-0-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "MIP Map 1 Graphics",
+            "Pipeline": "mip-map-1-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "MIP Map 2 Graphics",
+            "Pipeline": "mip-map-2-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "MIP Map 3 Graphics",
+            "Pipeline": "mip-map-3-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+
+
+        {
+            "Name": "Temporal Accumulation Indirect Diffuse Graphics",
+            "Pipeline": "temporal-accumulation-indirect-diffuse-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Temporal Accumulation Denoiser Graphics",
+            "Pipeline": "temporal-accumulation-denoiser-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Enabled": "False"
+        },
+        
+        {
+            "Name": "Indirect Diffuse Filter Graphics",
+            "Pipeline": "indirect-diffuse-filter-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Emissive Filter Graphics",
+            "Pipeline": "indirect-diffuse-filter-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Attachment2": {
+                "Name": "Emissive Radiance Output",
+                "ParentJobName": "Temporal Accumulation Indirect Diffuse Graphics"
+            },
+            "Enabled": "False"
+        },
+        {
+            "Name": "Direct Sun Filter Graphics",
+            "Pipeline": "indirect-diffuse-filter-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Attachment2": {
+                "Name": "Direct Sun Radiance Output",
+                "ParentJobName": "Temporal Accumulation Indirect Diffuse Graphics"
+            },
+            "Enabled": "False"
+        },
+        {
+            "Name": "Diffuse Filter Graphics",
+            "Pipeline": "diffuse-filter-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Specular Filter Graphics",
+            "Pipeline": "specular-filter-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+
+        
+
+        {
+            "Name": "Indirect Diffuse SVGF Filter 0 Graphics",
+            "Pipeline": "svgf-filter-graphics-0.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Enabled": "False"
+        },
+        {
+            "Name": "Indirect Diffuse SVGF Filter 1 Graphics",
+            "Pipeline": "svgf-filter-graphics-1.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Attachment2": {
+                "Name": "Filtered Radiance Output", 
+                "ParentJobName": "Indirect Diffuse SVGF Filter 0 Graphics"
+            },
+            "Attachment5": {
+                "Name": "Filtered Variance Output", 
+                "ParentJobName": "Indirect Diffuse SVGF Filter 0 Graphics"
+            },
+            "Enabled": "False"
+        },
+        {
+            "Name": "Indirect Diffuse SVGF Filter 2 Graphics",
+            "Pipeline": "svgf-filter-graphics-2.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Attachment2": {
+                "Name": "Filtered Radiance Output", 
+                "ParentJobName": "Indirect Diffuse SVGF Filter 1 Graphics"
+            },
+            "Attachment5": {
+                "Name": "Filtered Variance Output", 
+                "ParentJobName": "Indirect Diffuse SVGF Filter 1 Graphics"
+            },
+            "Enabled": "False"
+        },
+        {
+            "Name": "Indirect Diffuse SVGF Filter 3 Graphics",
+            "Pipeline": "svgf-filter-graphics-2.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Attachment2": {
+                "Name": "Filtered Radiance Output", 
+                "ParentJobName": "Indirect Diffuse SVGF Filter 2 Graphics"
+            },
+            "Attachment5": {
+                "Name": "Filtered Variance Output", 
+                "ParentJobName": "Indirect Diffuse SVGF Filter 2 Graphics"
+            },
+            "Enabled": "False"
+        },
+        {
+            "Name": "Specular SVGF Filter 0 Graphics",
+            "Pipeline": "svgf-filter-graphics-0.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Attachment2": {
+                "Name" : "Specular Radiance Output",
+                "ParentJobName": "Temporal Accumulation Denoiser Graphics"
+            },
+            "Attachment5": {
+                "Name" : "Specular Moment Output",
+                "ParentJobName": "Temporal Accumulation Denoiser Graphics"
+            },
+            "Enabled": "False"
+        },
+        {
+            "Name": "Specular SVGF Filter 1 Graphics",
+            "Pipeline": "svgf-filter-graphics-1.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Attachment2": {
+                "Name" : "Filtered Radiance Output",
+                "ParentJobName": "Specular SVGF Filter 0 Graphics"
+            },
+            "Attachment5": {
+                "Name" : "Filtered Variance Output",
+                "ParentJobName": "Specular SVGF Filter 0 Graphics"
+            },
+            "Enabled": "False"
+        },
+        {
+            "Name": "Specular SVGF Filter 2 Graphics",
+            "Pipeline": "svgf-filter-graphics-2.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Attachment2": {
+                "Name" : "Filtered Radiance Output",
+                "ParentJobName": "Specular SVGF Filter 1 Graphics"
+            },
+            "Attachment5": {
+                "Name" : "Filtered Variance Output",
+                "ParentJobName": "Specular SVGF Filter 1 Graphics"
+            },
+            "Enabled": "False"
+        },
+        {
+            "Name": "Specular SVGF Filter 3 Graphics",
+            "Pipeline": "svgf-filter-graphics-2.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Attachment2": {
+                "Name" : "Filtered Radiance Output",
+                "ParentJobName": "Specular SVGF Filter 2 Graphics"
+            },
+            "Attachment5": {
+                "Name" : "Filtered Variance Output",
+                "ParentJobName": "Specular SVGF Filter 2 Graphics"
+            },
+            "Enabled": "False"
+        },
+        {
+            "Name": "Ambient Occlusion Gaussian Blur Graphics",
+            "Pipeline": "gaussian-blur.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle",
+            "Enabled": "False"
+        },
+
+        {
+            "Name": "Indirect Diffuse SDF Resolve Graphics",
+            "Pipeline": "indirect-diffuse-sdf-resolve-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+
+        {
+            "Name": "TAA Resolve Graphics",
+            "Pipeline": "taa-resolve-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+
+        {
+            "Name": "Swap Chain Graphics",
+            "Pipeline": "swap_chain.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics"
+        },
+        {
+            "Name": "Copy Temporal Restir",
+            "Pipeline": "copy-temporal-restir.json",
+            "Type": "Copy",
+            "PassType": "Copy"
+        }
+    ]
+}

@@ -1,0 +1,75 @@
+{
+    "Type": "Graphics",
+    "PassType": "Mesh Graphics",
+    "Shader": "deferred.shader",
+    "Attachments": [
+        {
+            "Name" : "World Position Output",
+            "Type": "TextureInputOutput",
+            "ParentJobName": "Simple Offscreen Graphics"
+        },
+        {
+            "Name" : "Texture Coordinate Output",
+            "Type": "TextureInputOutput",
+            "ParentJobName": "Simple Offscreen Graphics"
+        },
+        {
+            "Name" : "Normal Output",
+            "Type": "TextureInputOutput",
+            "ParentJobName": "Simple Offscreen Graphics"
+        },
+        {
+            "Name" : "Motion Vector Output",
+            "Type": "TextureInputOutput",
+            "ParentJobName": "Simple Offscreen Graphics"
+        },
+        {
+            "Name": "Depth Output",
+            "Type": "TextureInputOutput",
+            "ParentJobName": "Simple Offscreen Graphics"
+        },
+        {
+            "Name": "Clip Space Output",
+            "Type": "TextureInputOutput",
+            "ParentJobName": "Simple Offscreen Graphics"
+        },
+        {
+            "Name": "Debug Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "localData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        }
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "True",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "Back",
+        "FrontFace": "CounterClockwise"
+    },
+    "VertexFormat":
+    [
+        "Vec4",
+        "Vec4",
+        "Vec4"
+    ]
+}

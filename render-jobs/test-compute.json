@@ -1,0 +1,37 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "test-compute.shader",
+    "Attachments": [
+        {
+            "Name" : "Node List",
+            "Type": "BufferOutput",
+            "ShaderResourceName": "nodeList",
+            "ParentJobName": "This",
+            "Size": 65536
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "positions",
+            "type" : "buffer",
+            "size" : 65536,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "triangles",
+            "type" : "buffer",
+            "size" : 65536,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "triangleIndices",
+            "type" : "buffer",
+            "size" : 65536,
+            "shader_stage" : "compute",
+            "usage": "storage"
+        }
+    ]
+}

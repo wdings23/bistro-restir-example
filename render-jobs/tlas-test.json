@@ -1,0 +1,114 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "tlas-test.shader",
+    "Attachments": [
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureOutput",
+            "Format": "rgba16float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+       
+
+        {
+            "Name" : "World Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+        },
+        {
+            "Name" : "Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+        },
+        {
+            "Name" : "Texture Coordinate Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+        },
+        {
+            "Name" : "Sky Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Atmosphere Graphics"
+        }
+        
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 2048,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        },
+        { 
+            "name" : "TLAS Nodes",
+            "type" : "buffer",
+            "shader_stage" : "fragment",
+            "usage": "read_only_storage",
+            "size" : 4000000
+        },
+        { 
+            "name" : "BLAS Nodes 0",
+            "type" : "buffer",
+            "shader_stage" : "fragment",
+            "usage": "read_only_storage",
+            "size" : 200000000
+        },
+        { 
+            "name" : "BLAS Nodes 1",
+            "type" : "buffer",
+            "shader_stage" : "fragment",
+            "usage": "read_only_storage",
+            "size" : 200000000
+        },
+        { 
+            "name" : "BLAS Node Indices",
+            "type" : "buffer",
+            "shader_stage" : "fragment",
+            "usage": "read_only_storage",
+            "size" : 1048576
+        },
+        { 
+            "name" : "Vertex Buffer",
+            "type" : "buffer",
+            "shader_stage" : "fragment",
+            "usage": "read_only_storage",
+            "size" : 140000000
+        },
+        { 
+            "name" : "Index Buffer",
+            "type" : "buffer",
+            "shader_stage" : "fragment",
+            "usage": "read_only_storage",
+            "size" : 40000000
+        },
+        {
+            "name": "blue noise texture",
+            "type": "texture2d",
+            "shader_stage": "fragment",
+            "format": "rgb8unorm",
+            "usage": "uniform",
+            "file_path": "D:\\projects\\free-blue-noise-textures\\512_512\\LDR_RGBA_0.png"
+        }
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

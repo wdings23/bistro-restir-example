@@ -1,0 +1,49 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "build-bvh-2.shader",
+    "Dispatch": [1, 1, 1],
+    "Attachments": [
+        {
+            "Name" : "Intermediate Nodes",
+            "Type": "BufferOutput",
+            "ParentJobName": "This",
+            "Size": 1048576
+        },
+        {
+            "Name" : "Leaf Nodes",
+            "Type": "BufferOutput",
+            "ParentJobName": "This",
+            "Size": 1048576
+        },
+        {
+            "Name" : "Temporary Intermediate Nodes",
+            "Type": "BufferOutput",
+            "ParentJobName": "This",
+            "Size": 1048576
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "positions",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "triangles",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "meshInfoList",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        }
+    ]
+}

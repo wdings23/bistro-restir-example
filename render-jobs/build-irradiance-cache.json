@@ -1,0 +1,94 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "build-irradiance-cache.shader",
+    "Dispatch": [4, 4, 1],
+    "Attachments": [
+        {
+            "Name" : "Irradiance Cache",
+            "Type": "BufferOutput",
+            "ShaderResourceName": "irradianceCache",
+            "ParentJobName": "This",
+            "Size": 8388608
+        },
+        {
+            "Name" : "Irradiance Cache Queue",
+            "Type": "BufferOutput",
+            "ShaderResourceName": "irradianceCacheQueue",
+            "ParentJobName": "This",
+            "Size": 1048576
+        },
+        {
+            "Name" : "Counters",
+            "Type": "BufferOutput",
+            "ShaderResourceName": "irradianceCacheQueue",
+            "ParentJobName": "This",
+            "Size": 256
+        },
+
+        {
+            "Name" : "Sky Output",
+            "ParentJobName": "Atmosphere Graphics",
+            "Type": "TextureInput"
+        },
+        {
+            "Name" : "World Position Output",
+            "ParentJobName": "Deferred Offscreen Graphics",
+            "Type": "TextureInput"
+        },
+        {
+            "Name": "Hit Position Output",
+            "ParentJobName": "Temporal Restir Graphics",
+            "Type": "TextureInput"
+        },
+        {
+            "Name": "Hit Normal Output",
+            "ParentJobName": "Temporal Restir Graphics",
+            "Type": "TextureInput"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "compute",
+            "usage": "uniform"
+        },
+        { 
+            "name" : "BVH Nodes 2",
+            "type" : "buffer",
+            "shader_stage" : "compute",
+            "usage": "read_only_storage",
+            "size" : 1048576
+        },
+        { 
+            "name" : "positions 2",
+            "type" : "buffer",
+            "shader_stage" : "compute",
+            "usage": "read_only_storage",
+            "size" : 1048576
+        },
+        { 
+            "name" : "triangles 2",
+            "type" : "buffer",
+            "shader_stage" : "compute",
+            "usage": "read_only_storage",
+            "size" : 1048576
+        },
+        { 
+            "name" : "meshTriangleRangeData",
+            "type" : "buffer",
+            "size" : 65536,
+            "shader_stage" : "all",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "materialData",
+            "type" : "buffer",
+            "size" : 65536,
+            "shader_stage" : "all",
+            "usage": "read_only_storage"
+        }
+    ]
+}

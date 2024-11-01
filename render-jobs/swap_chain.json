@@ -1,0 +1,251 @@
+{
+    "Type": "Graphics",
+    "PassType": "Swap Chain Full Triangle",
+    "Shader": "swap-chain.shader",
+    "Attachments": [
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Graphics"
+        },
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Spatial Restir Graphics 0"
+        },
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Spatial Restir Graphics 1"
+        },
+        {
+            "Name" : "Direct Sun Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Direct Graphics"
+        },
+        {
+            "Name" : "Emissive Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Emissive Graphics"
+        },
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Spatial Restir Emissive Graphics"
+        },
+
+        {
+            "Name" : "Specular Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Direct Graphics"
+        },
+        {
+            "Name" : "Indirect Diffuse Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Accumulation Denoiser Graphics"
+        },
+
+        {
+            "Name" : "Direct Sun Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Accumulation Denoiser Graphics"
+        },
+        {
+            "Name" : "Emissive Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Accumulation Denoiser Graphics"
+        },
+        {
+            "Name" : "Specular Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Accumulation Denoiser Graphics"
+        },
+
+
+        {
+            "Name" : "Filtered Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Indirect Diffuse SVGF Filter 0 Graphics"
+        },
+        {
+            "Name" : "Filtered Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Indirect Diffuse SVGF Filter 1 Graphics"
+        },
+        {
+            "Name" : "Filtered Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Indirect Diffuse SVGF Filter 2 Graphics"
+        },
+        {
+            "Name" : "Filtered Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Indirect Diffuse SVGF Filter 3 Graphics"
+        },
+
+        {
+            "Name" : "Filtered Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Specular SVGF Filter 0 Graphics"
+        },
+        {
+            "Name" : "Filtered Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Specular SVGF Filter 1 Graphics"
+        },
+        {
+            "Name" : "Filtered Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Specular SVGF Filter 2 Graphics"
+        },
+        
+
+        {
+            "Name" : "Filtered Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Ambient Occlusion Gaussian Blur Graphics"
+        },
+
+        {
+            "Name" : "Ambient Occlusion Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Direct Graphics"
+        },
+
+        {
+            "Name" : "Shadow Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Debug Shadow Compute"
+        },
+
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "SDF Ambient Occlusion Graphics"
+        },
+        {
+            "Name" : "Shadow Output",
+            "Type": "TextureInput",
+            "ParentJobName": "SDF Ambient Occlusion Graphics"
+        },
+        {
+            "Name" : "Volumetric Output",
+            "Type": "TextureInput",
+            "ParentJobName": "SDF Draw Graphics"
+        },
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "SDF Draw Graphics"
+        },
+        {
+            "Name" : "Filtered Output 0",
+            "Type": "TextureInput",
+            "ParentJobName": "Bicubic Filter SDF Ambient Occlusion Graphics"
+        },
+        {
+            "Name" : "Filtered Output 1",
+            "Type": "TextureInput",
+            "ParentJobName": "Bicubic Filter SDF Ambient Occlusion Graphics"
+        },
+        {
+            "Name" : "Filtered Output 2",
+            "Type": "TextureInput",
+            "ParentJobName": "Bicubic Filter SDF Ambient Occlusion Graphics"
+        },
+        {
+            "Name" : "Filtered Output",
+            "Type": "TextureInput",
+            "ParentJobName": "SDF Temporal Accumulation Graphics"
+        },
+        {
+            "Name" : "Indirect Diffuse Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Accumulation Indirect Diffuse Graphics"
+        },
+        {
+            "Name" : "Indirect Diffuse Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Diffuse Filter Graphics"
+        },
+        {
+            "Name" : "Specular Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Specular Filter Graphics"
+        },
+        {
+            "Name" : "Shadow Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Character Shadow Graphics"
+        },
+        {
+            "Name" : "Ambient Occlusion Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Screen Space Visibility Bitmask Graphics"
+        },
+        {
+            "Name" : "Indirect Diffuse Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Screen Space Visibility Bitmask Graphics"
+        },
+        {
+            "Name" : "TAA Output",
+            "Type": "TextureInput",
+            "ParentJobName": "TAA Resolve Graphics"
+        },
+        {
+            "Name" : "Debug Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+        },
+        {
+            "Name" : "Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Indirect Offscreen Lighting Graphics"
+        },
+        {
+            "Name" : "Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Indirect Offscreen Composite Graphics"
+        },
+        {
+            "Name" : "TAA Output",
+            "Type": "TextureInput",
+            "ParentJobName": "TAA Indirect Resolve Graphics"
+        },
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "TLAS Test Graphics"
+        }
+        
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 2048,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        }
+
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

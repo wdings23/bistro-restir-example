@@ -1,0 +1,73 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "indirect-diffuse-sdf-resolve-graphics.shader",
+    "Attachments": [
+        {
+            "Name" : "Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        
+        {
+            "Name" : "Indirect Diffuse Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Diffuse Filter Graphics"
+        },
+        {
+            "Name" : "Emissive Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Diffuse Filter Graphics"
+        },
+        {
+            "Name" : "Direct Sun Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Diffuse Filter Graphics"
+        },
+        {
+            "Name" : "Specular Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Specular Filter Graphics"
+        },
+        {
+            "Name" : "Ambient Occlusion Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Diffuse Filter Graphics"
+        },
+        {
+            "Name" : "Shadow Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Diffuse Filter Graphics"
+        }
+        
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        }
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

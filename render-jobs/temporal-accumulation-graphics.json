@@ -1,0 +1,69 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "temporal-accumulation-graphics.shader",
+    "Attachments": [
+        {
+            "Name" : "Indirect Diffuse Radiance Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Indirect Diffuse Moment Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        
+        {
+            "Name" : "World Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Spatial Restir Graphics 1"
+        },
+        {
+            "Name": "Previous Temporal Accumulated Indirect Diffuse Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous Temporal Accumulated Indirect Diffuse Moment Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        }    
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

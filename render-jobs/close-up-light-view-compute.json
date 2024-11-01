@@ -1,0 +1,58 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "close-up-light-view-compute.shader",
+    "Attachments": [
+        {
+            "Name" : "Camera Matrices",
+            "Type": "BufferOutput",
+            "Size": 8192
+        },
+        
+        {
+            "Name": "Bounding Boxes",
+            "Type": "BufferInput",
+            "ParentJobName": "Skinning Compute"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "localData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "all",
+            "usage": "uniform",
+            "resource_data": 
+            [
+                {
+                    "data": 0,
+                    "offset": 200
+                }
+            ]
+        }
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "True",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "Back",
+        "FrontFace": "CounterClockwise"
+    },
+    "VertexFormat":
+    [
+        "Vec4",
+        "Vec4",
+        "Vec4"
+    ]
+}

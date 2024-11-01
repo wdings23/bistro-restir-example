@@ -1,0 +1,51 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "light-view-compute.shader",
+    "Dispatch": [40, 30, 1],
+    "Attachments": [
+        {
+            "Name" : "Light View Clip Space Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        },
+        {
+            "Name" : "Tile Pages",
+            "Type": "BufferOutput",
+            "Size": 262144,
+            "Usage": "Compute"
+        },
+        {
+            "Name": "Visible Tiles",
+            "Type": "BufferOutput",
+            "Size": 4096,
+            "Usage": "Compute"
+        },
+        {
+            "Name": "Counters",
+            "Type": "BufferOutput",
+            "Size": 1024,
+            "Usage": "Compute"
+        },
+        {
+            "Name": "Valid Tiles",
+            "Type": "BufferOutput",
+            "Size": 262144,
+            "Usage": "Compute"
+        },
+        {
+            "Name" : "World Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Simple Offscreen Graphics"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "compute",
+            "usage": "uniform"
+        }
+    ]
+}

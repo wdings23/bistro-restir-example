@@ -1,0 +1,121 @@
+{
+    "Type": "Copy",
+    "PassType": "Copy",
+    "Attachments": [
+        {
+            "Name": "Previous Indirect TAA Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "TAA Graphics",
+            "ParentName": "TAA Output",
+            "Format": "rgba32float"
+        },
+
+        {
+            "Name": "Previous Indirect World Position Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics",
+            "ParentName": "World Position Output",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Indirect Normal Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics",
+            "ParentName": "Normal Output",
+            "Format": "rgba16float"
+        },
+        {
+            "Name": "Previous Motion Vector Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics",
+            "ParentName": "Motion Vector Output",
+            "Format": "rgba32float"
+        },
+
+        {
+            "Name": "Previous Temporal Reservoir Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Temporal Restir Graphics",
+            "ParentName": "Reservoir Output",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Temporal Restir Radiance Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Temporal Restir Graphics",
+            "ParentName": "Radiance Output",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Ambient Occlusion Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Temporal Restir Graphics",
+            "ParentName": "Ambient Occlusion Output",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Temporal Hit Position Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Temporal Restir Graphics",
+            "ParentName": "Hit Position Output",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Temporal Hit Normal Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Temporal Restir Graphics",
+            "ParentName": "Hit Normal Output",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Temporal Restir Ray Direction",
+            "Type": "TextureOutput",
+            "ParentJobName": "Temporal Restir Graphics",
+            "ParentName": "Ray Direction Output",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Indirect Diffuse Radiance Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Temporal Accumulation Graphics",
+            "ParentName": "Indirect Diffuse Radiance Output",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Indirect Diffuse Moment Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Temporal Accumulation Graphics",
+            "ParentName": "Indirect Diffuse Moment Output",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Direct Lighting Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Temporal Accumulation Graphics",
+            "ParentName": "Direct Sun Radiance Output",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Specular Temporal Restir Radiance Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Temporal Restir Specular Graphics",
+            "ParentName": "Radiance Output",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Specular Temporal Reservoir Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Temporal Restir Specular Graphics",
+            "ParentName": "Reservoir Output",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Diffuse Filtered Radiance Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Diffuse Filter Graphics",
+            "ParentName": "Filtered Output",
+            "Format": "rgba32float"
+        }
+
+    ]
+}

@@ -1,0 +1,195 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "temporal-accumulation-denoiser-graphics.shader",
+    "Attachments": [
+        {
+            "Name" : "Indirect Diffuse Radiance Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Indirect Diffuse Moment Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Direct Sun Radiance Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Direct Sun Moment Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Emissive Radiance Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Emissive Moment Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Specular Radiance Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Specular Moment Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "World Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name" : "Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Spatial Restir Graphics 0"
+        },
+        {
+            "Name": "Previous Temporal Accumulated Indirect Diffuse Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous Temporal Accumulated Indirect Diffuse Moment Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name" : "Ambient Occlusion Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Graphics"
+        },
+        {
+            "Name": "Previous World Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Motion Vector Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name": "Previous Motion Vector Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Direct Sun Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Direct Graphics"
+        },
+        {
+            "Name": "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Spatial Restir Emissive Graphics"
+        },
+        {
+            "Name": "Specular Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Direct Graphics"
+        },
+
+        {
+            "Name": "Previous Temporal Restir Direct Sun Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous Emissive Spatial Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Previous Temporal Accumulated Emissive Moment Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+
+        {
+            "Name": "Previous Temporal Restir Specular Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        
+        {
+            "Name": "Previous Temporal Accumulated Specular Moment Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Copy Temporal Restir"
+        },
+        {
+            "Name": "Filtered Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Ambient Occlusion Gaussian Blur Graphics"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 2048,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        },
+        { 
+            "name" : "materialData",
+            "type" : "buffer",
+            "size" : 2048,
+            "shader_stage" : "all",
+            "usage": "read_only_storage"
+        }        
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

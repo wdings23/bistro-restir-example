@@ -1,0 +1,53 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "brick-setup-compute.shader",
+    "Attachments": [
+        {
+            "Name": "Bricks",
+            "Type": "BufferOutput",
+            "Size": 1048576
+        },
+        {
+            "Name": "Brixels",
+            "Type": "BufferOutput",
+            "Size": 67108864
+        },
+        {
+            "Name": "Brick To Brixel Mapping",
+            "Type": "BufferOutput",
+            "Size": 1048576
+        },
+        {
+            "Name": "Bounding Boxes",
+            "Type": "BufferInput",
+            "ParentJobName": "Skinning Compute"
+        },
+        {
+            "Name" : "Brixel Distances",
+            "Type": "BufferOutput",
+            "Size": 16777216
+        },
+        {
+            "Name" : "Brixel Barycentric Coordinates",
+            "Type": "BufferOutput",
+            "Size": 16777216
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "compute",
+            "usage": "uniform"
+        },
+        {
+            "name": "currTriangleRange",
+            "type": "buffer",
+            "size": 1024,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        }
+    ]
+}

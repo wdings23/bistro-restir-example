@@ -1,0 +1,102 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "mesh-culling-compute.shader",
+    "Attachments": [
+        {
+            "Name" : "Draw Indexed Calls",
+            "Type": "BufferOutput",
+            "Size": 1048576
+        },
+        {
+            "Name": "Draw Indexed Call Count",
+            "Type": "BufferOutput",
+            "Size": 1024
+        },
+        {
+            "Name": "Visible Mesh ID",
+            "Type": "BufferOutput",
+            "Size": 1048576
+        },
+        {
+            "Name": "Debug Buffer",
+            "Type": "BufferOutput",
+            "Size": 16777216
+        },
+
+        {
+            "Name" : "Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Texture Gather Depth Graphics"
+        },
+        {
+            "Name": "Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Down Rez Depth 0 Graphics"
+        },
+        {
+            "Name": "Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Down Rez Depth 1 Graphics"
+        },
+        {
+            "Name": "Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Down Rez Depth 2 Graphics"
+        },
+        {
+            "Name": "Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Down Rez Depth 3 Graphics"
+        },
+        {
+            "Name": "Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Down Rez Depth 4 Graphics"
+        },
+        {
+            "Name": "Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Down Rez Depth 5 Graphics"
+        },
+        {
+            "Name": "Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Down Rez Depth 6 Graphics"
+        },
+        {
+            "Name": "Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Down Rez Depth 7 Graphics"
+        },
+        {
+            "Name": "Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Down Rez Depth 8 Graphics"
+        }
+
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "compute",
+            "usage": "uniform"
+        },
+        { 
+            "name" : "meshIndexRanges",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "meshBoundingBoxes",
+            "type" : "buffer",
+            "size" : 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        }
+    ]
+}

@@ -1,0 +1,25 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "finish-bvh-step-compute.shader",
+    "Dispatch": [1, 1, 1],
+    "Attachments": [
+        {
+            "Name" : "BVH Process Info",
+            "Type": "BufferInputOutput",
+            "ParentJobName": "Initialize Intermediate Nodes Compute"
+        },
+        {
+            "Name" : "Truncation Result",
+            "Type": "BufferInput",
+            "ParentJobName": "Truncate Workgroup Intermediate Nodes Compute"
+        },
+        {
+            "Name": "Node Level Range",
+            "Type": "BufferOutput",
+            "ParentJobName": "This",
+            "Size": 4096
+        }
+    ],
+    "ShaderResources": []
+}

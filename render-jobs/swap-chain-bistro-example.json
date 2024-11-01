@@ -1,0 +1,56 @@
+{
+    "Type": "Graphics",
+    "PassType": "Swap Chain Full Triangle",
+    "Shader": "swap-chain-bistro-example.shader",
+    "Attachments": [
+        {
+            "Name" : "TAA Output",
+            "Type": "TextureInput",
+            "ParentJobName": "TAA Graphics"
+        },
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Graphics"
+        },
+        {
+            "Name" : "Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Lighting Composite Graphics"
+        },
+        {
+            "Name" : "Indirect Diffuse Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Accumulation Graphics"
+        }
+        
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 2048,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        }
+
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

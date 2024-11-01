@@ -1,0 +1,82 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "bicubic-filter-graphics.shader",
+    "Attachments": [
+        {
+            "Name" : "Filtered Output 0",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Filtered Output 1",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Filtered Output 2",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        
+
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "SDF Ambient Occlusion Graphics"
+        },
+        {
+            "Name" : "Shadow Output",
+            "Type": "TextureInput",
+            "ParentJobName": "SDF Ambient Occlusion Graphics"
+        },
+        {
+            "Name" : "Indirect Radiance",
+            "Type": "TextureInput",
+            "ParentJobName": "Brixel Indirect Radiance Graphics"
+        },
+        {
+            "Name" : "World Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name" : "Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Offscreen Graphics"
+        },
+        {
+            "Name" : "Ray Count Output",
+            "Type": "TextureInput",
+            "ParentJobName": "SDF Ambient Occlusion Graphics"
+        }
+        
+        
+    ],
+    "ShaderResources": [
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

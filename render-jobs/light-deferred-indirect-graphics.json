@@ -1,0 +1,50 @@
+{
+    "Type": "Graphics",
+    "PassType": "Mesh Graphics",
+    "Shader": "light-deferred-indirect-graphics.shader",
+    "Attachments": [
+        {
+            "Name" : "Depth Output",
+            "Type": "TextureOutput",
+            "Format": "r32float"
+        },
+        {
+            "Name" : "Debug Output",
+            "Type": "TextureOutput",
+            "Format": "rgba16float"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "indirectUniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        }
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "False"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "True",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    },
+    "VertexFormat":
+    [
+        "Vec4",
+        "Vec4",
+        "Vec4"
+    ]
+}

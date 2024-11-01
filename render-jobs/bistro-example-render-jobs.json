@@ -1,0 +1,187 @@
+{
+    "Jobs": 
+    [
+        {
+            "Name": "Mesh Culling Compute",
+            "Pipeline": "mesh-culling-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Dispatch": [1, 1, 1]
+        },
+        {
+            "Name": "Atmosphere Graphics",
+            "Pipeline": "atmosphere.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Deferred Indirect Offscreen Graphics",
+            "Pipeline": "deferred-indirect.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics"
+        },
+        {
+            "Name": "Texture Gather Depth Graphics",
+            "Pipeline": "texture-gather-depth-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 0 Graphics",
+            "Pipeline": "down-rez-depth-0-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 1 Graphics",
+            "Pipeline": "down-rez-depth-1-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 2 Graphics",
+            "Pipeline": "down-rez-depth-2-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 3 Graphics",
+            "Pipeline": "down-rez-depth-3-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 4 Graphics",
+            "Pipeline": "down-rez-depth-4-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 5 Graphics",
+            "Pipeline": "down-rez-depth-5-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 6 Graphics",
+            "Pipeline": "down-rez-depth-6-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 7 Graphics",
+            "Pipeline": "down-rez-depth-7-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Down Rez Depth 8 Graphics",
+            "Pipeline": "down-rez-depth-8-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Secondary Mesh Culling Compute",
+            "Pipeline": "secondary-mesh-culling-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute",
+            "Dispatch": [1, 1, 1]
+        },
+        {
+            "Name": "Secondary Deferred Indirect Offscreen Graphics",
+            "Pipeline": "secondary-deferred-indirect-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics"
+        },
+        { 
+            "Name": "Build Irradiance Cache Compute",
+            "Pipeline": "bistro-build-irradiance-cache.json",
+            "Type": "Compute",
+            "PassType": "Compute"
+        },
+        {
+            "Name": "TLAS Test Graphics",
+            "Pipeline": "tlas-test.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Temporal Restir Graphics",
+            "Pipeline": "bistro-temporal-restir-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Temporal Restir Specular Graphics",
+            "Pipeline": "bistro-temporal-restir-specular-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Indirect Diffuse MIP Map 0 Graphics",
+            "Pipeline": "bistro-mip-map-0-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Indirect Diffuse MIP Map 1 Graphics",
+            "Pipeline": "bistro-mip-map-1-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Indirect Diffuse MIP Map 2 Graphics",
+            "Pipeline": "bistro-mip-map-2-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Indirect Diffuse MIP Map 3 Graphics",
+            "Pipeline": "bistro-mip-map-3-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Temporal Accumulation Graphics",
+            "Pipeline": "bistro-temporal-accumulation-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Diffuse Filter Graphics",
+            "Pipeline": "bistro-diffuse-filter-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Specular Filter Graphics",
+            "Pipeline": "bistro-specular-filter-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Lighting Composite Graphics",
+            "Pipeline": "bistro-deferred-indirect-composite-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "TAA Graphics",
+            "Pipeline": "taa-bistro-example.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Swap Chain Graphics",
+            "Pipeline": "swap-chain-bistro-example.json",
+            "Type": "Graphics",
+            "PassType": "Mesh Graphics"
+        },
+        {
+            "Name": "Bistro Example Copy",
+            "Pipeline": "bistro-example-copy.json",
+            "Type": "Copy",
+            "PassType": "Copy"
+        }
+    ]
+}

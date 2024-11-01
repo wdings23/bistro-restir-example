@@ -1,0 +1,69 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "voxelize-compute.shader",
+    "Attachments": [
+        {
+            "Name": "Skinned Vertex Positions",
+            "Type": "BufferInput",
+            "ParentJobName": "Skinning Compute"
+        },
+        {
+            "Name": "Bounding Boxes",
+            "Type": "BufferInput",
+            "ParentJobName": "Skinning Compute"
+        },
+        {
+            "Name": "Counters",
+            "Type": "BufferOutput",
+            "Size": 1024
+        },
+        {
+            "Name" : "Bricks",
+            "Type": "BufferInput",
+            "ParentJobName": "Brick Setup Compute"
+        },
+        {
+            "Name" : "Brixels",
+            "Type": "BufferInputOutput",
+            "ParentJobName": "Brick Setup Compute"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "compute",
+            "usage": "uniform"
+        },
+        { 
+            "name" : "meshVertexRanges",
+            "type" : "buffer",
+            "size" : 2048,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        {
+            "name": "triangleIndices",
+            "type": "buffer",
+            "size": 1048576,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        {
+            "name": "triangleIndexRanges",
+            "type": "buffer",
+            "size": 1024,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        {
+            "name": "currTriangleRange",
+            "type": "buffer",
+            "size": 1024,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        }
+    ]
+}

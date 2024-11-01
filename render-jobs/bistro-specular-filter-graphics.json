@@ -1,0 +1,73 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "indirect-diffuse-filter-graphics.shader",
+    "Attachments": [
+        {
+            "Name" : "Filtered Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+        {
+            "Name" : "Debug",
+            "Type": "TextureOutput",
+            "Format": "rgba32float",
+            "ScaleWidth": 1.0,
+            "ScaleHeight": 1.0
+        },
+
+
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Temporal Restir Specular Graphics"
+        },
+        {
+            "Name" : "World Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+        },
+        {
+            "Name" : "Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+        }
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "uniformData",
+            "type" : "buffer",
+            "size" : 1024,
+            "shader_stage" : "all",
+            "usage": "uniform"
+        },
+        {
+            "name": "blue noise texture",
+            "type": "texture2d",
+            "shader_stage": "fragment",
+            "format": "rgb8unorm",
+            "usage": "uniform",
+            "file_path": "D:\\projects\\free-blue-noise-textures\\512_512\\LDR_RGB1_0.png"
+        }
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}
