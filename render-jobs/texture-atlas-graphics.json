@@ -1,0 +1,121 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "texture-atlas-graphics.shader",
+    "Attachments": [
+        {
+            "Name" : "Albedo Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        },
+        {
+            "Name" : "Debug 0",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        },
+        {
+            "Name" : "Debug 1",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        },
+        {
+            "Name" : "Debug 2",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        },
+        {
+            "Name" : "Debug 3",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        },
+        {
+            "Name" : "Debug 4",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        },
+
+        
+
+
+        {
+            "Name": "Texture Atlas 0",
+            "Type": "TextureInput",
+            "ParentJobName": "Texture Page Queue Compute"
+        },
+        {
+            "Name": "Texture Atlas 1",
+            "Type": "TextureInput",
+            "ParentJobName": "Texture Page Queue Compute"
+        },
+        {
+            "Name": "Texture Atlas 2",
+            "Type": "TextureInput",
+            "ParentJobName": "Texture Page Queue Compute"
+        },
+        {
+            "Name": "Texture Atlas 3",
+            "Type": "TextureInput",
+            "ParentJobName": "Texture Page Queue Compute"
+        },
+        {
+            "Name": "Texture Page Info",
+            "Type": "TextureInput",
+            "ParentJobName": "Texture Page Queue Compute"
+        },
+        {
+            "Name": "Normal Texture Page Info",
+            "Type": "TextureInput",
+            "ParentJobName": "Texture Page Queue Compute"
+        },
+        {
+            "Name": "Texture Coordinate Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+        },
+        {
+            "Name" : "MIP Texture Page Hash Table",
+            "Type": "BufferInputOutput",
+            "ParentJobName": "Texture Page Queue Compute"
+        },
+        {
+            "Name" : "Initial Texture Atlas",
+            "Type": "TextureInput",
+            "ParentJobName": "Texture Page Queue Compute"
+        }
+
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "Texture Sizes",
+            "type" : "buffer",
+            "size" : 65536,
+            "shader_stage" : "all",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "Normal Texture Sizes",
+            "type" : "buffer",
+            "size" : 65536,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        }
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

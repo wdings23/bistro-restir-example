@@ -48,9 +48,9 @@
             "ParentJobName": "Temporal Accumulation Graphics"
         },
         {
-            "Name" : "Material Output",
+            "Name" : "Albedo Output",
             "Type": "TextureInput",
-            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+            "ParentJobName": "Texture Atlas Graphics"
         },
         {
             "Name" : "Roughness Metalness Output",

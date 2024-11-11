@@ -45,7 +45,13 @@
             "Name": "Hit Normal Output",
             "ParentJobName": "Temporal Restir Graphics",
             "Type": "TextureInput"
+        },
+        {
+            "Name" : "Initial Texture Atlas",
+            "Type": "TextureInput",
+            "ParentJobName": "Texture Page Queue Compute"
         }
+
     ],
     "ShaderResources": [
         { 

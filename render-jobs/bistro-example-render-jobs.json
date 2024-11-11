@@ -93,6 +93,24 @@
             "Type": "Graphics",
             "PassType": "Mesh Graphics"
         },
+        {
+            "Name": "Texture Page Queue Compute",
+            "Pipeline": "texture-page-queue-compute.json",
+            "Type": "Compute",
+            "PassType": "Compute"
+        },
+        {
+            "Name": "Texture Atlas Graphics",
+            "Pipeline": "texture-atlas-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Normal Texture Atlas Graphics",
+            "Pipeline": "normal-texture-atlas-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
         { 
             "Name": "Build Irradiance Cache Compute",
             "Pipeline": "bistro-build-irradiance-cache.json",

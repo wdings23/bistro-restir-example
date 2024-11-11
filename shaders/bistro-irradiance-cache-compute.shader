@@ -183,6 +183,9 @@ var hitPositionTexture: texture_2d<f32>;
 var hitNormalTexture: texture_2d<f32>;
 
 @group(0) @binding(7)
+var initialTextureAtlas: texture_2d<f32>;
+
+@group(0) @binding(8)
 var textureSampler: sampler;
 
 @group(1) @binding(0)
@@ -480,6 +483,7 @@ fn updateIrradianceCache(
         // get hit mesh
         let iMaterialID: u32 = aMeshMaterialID[intersectionInfo.miMeshID];
         let material: Material = aMaterials[iMaterialID-1];
+        let iAlbedoTextureID: u32 = material.miAlbedoTextureID;
         cacheRadiance += material.mEmissive.xyz;
 
         // hit another mesh triangle, get the irradiance cache in the vicinity
@@ -493,7 +497,14 @@ fn updateIrradianceCache(
         // get the radiance from probe image
         let fRadianceDP: f32 = max(dot(hitNormal.xyz, ray.mDirection.xyz), 0.0f);
         cacheRadiance += getRadianceFromIrradianceCacheProbe(ray.mDirection.xyz * -1.0f, iHitIrradianceCacheIndex) * fRadianceDP;
-    
+
+        // albedo color of the hit mesh
+        let albedoColor: vec4<f32> = getIntersectionTriangleAlbedo(
+            iHitTriangleIndex,
+            iAlbedoTextureID,
+            intersectionInfo.mBarycentricCoordinate);
+        cacheRadiance *= albedoColor.xyz;
+
         // update irradiance cache probe with the radiance and ray direction 
         updateIrradianceCacheProbe(
             cacheRadiance, 
@@ -1189,6 +1200,67 @@ fn intersectTotalBVH4(
             }
         }
     }
+
+    return ret;
+}
+
+// get uv on the triangle
+fn getIntersectionTriangleAlbedo(
+    iTriangleIndex: i32,
+    iTextureID: u32,
+    barycentricCoordinate: vec3<f32>) -> vec4<f32>
+{
+    let fInitialTextureAtlasSize: f32 = 512.0f;
+    let iInitialPageSize: i32 = 8;
+    let iNumInitialPagesPerRow: i32 = i32(fInitialTextureAtlasSize) / 8; 
+
+    let iIndex: u32 = u32(iTriangleIndex) * 3u;
+    let pos0: vec4<f32> = aVertexBuffer[aiIndexBuffer[iIndex]].mPosition;
+    let pos1: vec4<f32> = aVertexBuffer[aiIndexBuffer[iIndex + 1u]].mPosition;
+    let pos2: vec4<f32> = aVertexBuffer[aiIndexBuffer[iIndex + 2u]].mPosition;
+    let uv0: vec2<f32> = aVertexBuffer[aiIndexBuffer[iIndex]].mTexCoord.xy;
+    let uv1: vec2<f32> = aVertexBuffer[aiIndexBuffer[iIndex + 1u]].mTexCoord.xy;
+    let uv2: vec2<f32> = aVertexBuffer[aiIndexBuffer[iIndex + 2u]].mTexCoord.xy;
+    let uv: vec2<f32> = 
+        uv0 * barycentricCoordinate.x +
+        uv1 * barycentricCoordinate.y + 
+        uv2 * barycentricCoordinate.z;
+    
+    // get the uv difference from start of the page to current sample uv
+    var initialTextureDimension: vec2<i32> = vec2<i32>(iInitialPageSize, iInitialPageSize);
+    let initialImageCoord: vec2<i32> = vec2<i32>(
+        i32(uv.x * f32(initialTextureDimension.x)),
+        i32(uv.y * f32(initialTextureDimension.y))
+    );
+    let initialImagePageIndex: vec2<i32> = vec2<i32>(
+        initialImageCoord.x / iInitialPageSize,
+        initialImageCoord.y / iInitialPageSize
+    );
+    let initialStartPageImageCoord: vec2<i32> = vec2<i32>(
+        initialImagePageIndex.x * iInitialPageSize,
+        initialImagePageIndex.y * iInitialPageSize
+    ); 
+    let initialImageCoordDiff: vec2<i32> = initialImageCoord - initialStartPageImageCoord;
+    
+    // uv of the page in the atlas
+    // page x, y
+    let iInitialAtlasPageX: i32 = i32(iTextureID) % iNumInitialPagesPerRow;
+    let iInitialAtlasPageY: i32 = i32(iTextureID) / iNumInitialPagesPerRow;
+    
+    // atlas uv
+    let iInitialAtlasX: i32 = iInitialAtlasPageX * iInitialPageSize;
+    let iInitialAtlasY: i32 = iInitialAtlasPageY * iInitialPageSize;
+    let initialAtlasUV: vec2<f32> = vec2<f32>(
+        f32(iInitialAtlasX + initialImageCoordDiff.x) / fInitialTextureAtlasSize,
+        f32(iInitialAtlasY + initialImageCoordDiff.y) / fInitialTextureAtlasSize 
+    );
+
+    let ret: vec4<f32> = textureSampleLevel(
+        initialTextureAtlas,
+        textureSampler,
+        initialAtlasUV,
+        0.0f
+    );
 
     return ret;
 }

@@ -20,7 +20,7 @@
         {
             "Name": "Previous Indirect Normal Output",
             "Type": "TextureOutput",
-            "ParentJobName": "Deferred Indirect Offscreen Graphics",
+            "ParentJobName": "Normal Texture Atlas Graphics",
             "ParentName": "Normal Output",
             "Format": "rgba16float"
         },

@@ -125,6 +125,27 @@ fn fs_main(in: VertexOutput) -> FragmentOutput {
     out.normal.z = normalXYZ.z;
     out.normal.w = 1.0f;
 
+    var texCoord: vec2<f32> = in.texCoord.xy;
+    if(texCoord.x < 0.0f)
+    {
+        texCoord.x = fract(abs(1.0f - texCoord.x));
+    }
+    else if(texCoord.x > 1.0f)
+    {
+        texCoord.x = fract(texCoord.x);
+    }
+
+    if(texCoord.y < 0.0f)
+    {
+        texCoord.y = fract(abs(1.0f - texCoord.y));
+    }
+    else if(texCoord.y > 1.0f)
+    {
+        texCoord.y = fract(texCoord.y);
+    }
+
+    out.texCoord = vec4<f32>(texCoord.x, texCoord.y, 0.0f, 1.0f);
+
     // store depth and mesh id in worldPosition.w
     out.worldPosition.w = clamp(in.pos.z, 0.0f, 0.999f) + floor(in.worldPosition.w + 0.5f);
 
@@ -180,22 +201,23 @@ fn fs_main(in: VertexOutput) -> FragmentOutput {
     {
         textureColor = sampleTexture0(
             material.miAlbedoTextureID, 
-            in.texCoord);
+            out.texCoord.xy);
 
         normalTextureColor = sampleNormalTexture0(
             material.miNormalTextureID,
-            in.texCoord
+            out.texCoord.xy
         );
     }
     else 
     {
         textureColor = sampleTexture1(
             material.miAlbedoTextureID, 
-            in.texCoord);
+            out.texCoord.xy
+        );
 
         normalTextureColor = sampleNormalTexture1(
             material.miNormalTextureID,
-            in.texCoord
+            out.texCoord.xy
         );
     }
 
@@ -222,7 +244,8 @@ fn fs_main(in: VertexOutput) -> FragmentOutput {
     
     let sampleNormal: vec3<f32> = normalize(tangent * localNormal.x + binormal * localNormal.y + normalXYZ * localNormal.z);
 
-    out.normal = vec4<f32>(sampleNormal.xyz, 1.0f);
+    //out.normal = vec4<f32>(sampleNormal.xyz, 1.0f);
+    out.normal = vec4<f32>(normalXYZ, 1.0f);
     out.roughMetal = vec4<f32>(material.mSpecular.x, material.mSpecular.y, 0.0f, 0.0f);
 
     let fDP: f32 = max(dot(sampleNormal, normalize(vec3<f32>(1.0f, 1.0f, 1.0f))), 0.1f);

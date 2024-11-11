@@ -19,9 +19,14 @@
             "ParentJobName": "Lighting Composite Graphics"
         },
         {
-            "Name" : "Indirect Diffuse Radiance Output",
+            "Name" : "Albedo Output",
             "Type": "TextureInput",
-            "ParentJobName": "Temporal Accumulation Graphics"
+            "ParentJobName": "Texture Atlas Graphics"
+        },
+        {
+            "Name" : "Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Normal Texture Atlas Graphics"
         }
         
     ],

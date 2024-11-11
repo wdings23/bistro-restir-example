@@ -34,7 +34,7 @@
         {
             "Name" : "Normal Output",
             "Type": "TextureInput",
-            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+            "ParentJobName": "Normal Texture Atlas Graphics"
         },
         {
             "Name": "Previous Specular Temporal Restir Radiance Output",

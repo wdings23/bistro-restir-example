@@ -1,0 +1,139 @@
+{
+    "Type": "Compute",
+    "PassType": "Compute",
+    "Shader": "texture-page-queue-compute.shader",
+    "Dispatch": [8, 1, 1],
+    "Attachments": [
+        {
+            "Name" : "Texture Page Queue MIP",
+            "Type": "BufferOutput",
+            "ParentJobName": "This",
+            "Size": 8388608
+        },
+        {
+            "Name" : "Counters",
+            "Type": "BufferOutput",
+            "ParentJobName": "This",
+            "Size": 1024
+        },
+        {
+            "Name" : "Used Hash Table",
+            "Type": "BufferOutput",
+            "ParentJobName": "This",
+            "Size": 5000000
+        },
+        {
+            "Name" : "MIP Texture Page Hash Table",
+            "Type": "BufferOutput",
+            "ParentJobName": "This",
+            "Size": 10000000
+        },
+
+
+
+
+        {
+            "Name" : "World Position Output",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics",
+            "Type": "TextureInput"
+        },
+        {
+            "Name" : "Texture Coordinate Output",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics",
+            "Type": "TextureInput"
+        },
+
+        {
+            "Name" : "Texture Atlas 0",
+            "Type": "TextureOutput",
+            "ParentJobName": "This",
+            "ImageWidth": 8192,
+            "ImageHeight": 8192,
+            "Format": "rgba8unorm",
+            "LoadOp": "Load",
+            "StoreOp": "Store"
+        },
+        {
+            "Name" : "Texture Atlas 1",
+            "Type": "TextureOutput",
+            "ParentJobName": "This",
+            "ImageWidth": 8192,
+            "ImageHeight": 8192,
+            "Format": "rgba8unorm",
+            "LoadOp": "Load",
+            "StoreOp": "Store"
+        },
+        {
+            "Name" : "Texture Atlas 2",
+            "Type": "TextureOutput",
+            "ParentJobName": "This",
+            "ImageWidth": 8192,
+            "ImageHeight": 8192,
+            "Format": "rgba8unorm",
+            "LoadOp": "Load",
+            "StoreOp": "Store"
+        },
+        {
+            "Name" : "Texture Atlas 3",
+            "Type": "TextureOutput",
+            "ParentJobName": "This",
+            "ImageWidth": 8192,
+            "ImageHeight": 8192,
+            "Format": "rgba8unorm",
+            "LoadOp": "Load",
+            "StoreOp": "Store"
+        },
+        {
+            "Name" : "Initial Texture Atlas",
+            "Type": "TextureOutput",
+            "ParentJobName": "This",
+            "ImageWidth": 512,
+            "ImageHeight": 512,
+            "Format": "rgba8unorm",
+            "LoadOp": "Load",
+            "StoreOp": "Store"
+        },
+
+        {
+            "Name" : "Texture Page Info",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        },
+        {
+            "Name" : "Normal Texture Page Info",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        }
+        
+    ],
+    "ShaderResources": [
+        { 
+            "name" : "Texture Sizes",
+            "type" : "buffer",
+            "size" : 65536,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        },
+        {
+            "name": "meshMaterialIDs",
+            "type": "buffer",
+            "size": 1048576,
+            "shader_stage": "all",
+            "usage": "read_only_storage"
+        },
+        {
+            "name": "materials",
+            "type": "buffer",
+            "size": 1048576,
+            "shader_stage": "all",
+            "usage": "read_only_storage"
+        },
+        { 
+            "name" : "Normal Texture Sizes",
+            "type" : "buffer",
+            "size" : 65536,
+            "shader_stage" : "compute",
+            "usage": "read_only_storage"
+        }
+    ]
+}

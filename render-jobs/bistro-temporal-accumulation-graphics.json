@@ -49,7 +49,7 @@
         {
             "Name" : "Normal Output",
             "Type": "TextureInput",
-            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+            "ParentJobName": "Normal Texture Atlas Graphics"
         },
         {
             "Name" : "Radiance Output",

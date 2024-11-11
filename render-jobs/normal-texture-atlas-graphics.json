@@ -1,0 +1,56 @@
+{
+    "Type": "Graphics",
+    "PassType": "Full Triangle",
+    "Shader": "normal-texture-atlas-graphics.shader",
+    "Attachments": [
+        {
+            "Name" : "Normal Output",
+            "Type": "TextureOutput",
+            "Format": "rgba16float"
+        },
+        {
+            "Name" : "Local Normal Output",
+            "Type": "TextureOutput",
+            "Format": "rgba32float"
+        },
+        
+
+
+
+        {
+            "Name": "World Position Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+        },
+        {
+            "Name": "Normal Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Deferred Indirect Offscreen Graphics"
+        },
+        {
+            "Name": "Debug 0",
+            "Type": "TextureInput",
+            "ParentJobName": "Texture Atlas Graphics"
+        }
+    ],
+    "ShaderResources": [
+    ],
+    "BlendStates": [
+        {
+            "Enabled": "True"
+        }
+    ],
+    "DepthStencilState":
+    {
+        "DepthEnable": "False",
+        "DepthWriteMask": "One",
+        "DepthFunc": "LessEqual",
+        "StencilEnable": "False"
+    },
+    "RasterState":
+    {
+        "FillMode": "Solid",
+        "CullMode": "None",
+        "FrontFace": "CounterClockwise"
+    }
+}

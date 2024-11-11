@@ -52,7 +52,7 @@ class RenderJob(object):
             file_content = file.read()
             file.close()
             shader_source = file_content.decode('utf-8')
-            self.shader = device.create_shader_module(
+            self.shader =device.create_shader_module(
                 code=shader_source
             )
         
@@ -145,6 +145,8 @@ class RenderJob(object):
         self.attachment_views = {}
         self.attachment_formats = {}
         self.attachment_types = {}
+        self.attachment_load_ops = {}
+        self.attachment_store_ops = {}
 
         self.attachment_info = attachment_info
 
@@ -195,6 +197,10 @@ class RenderJob(object):
             attachment_width = int(image_width)
             attachment_height = int(image_height)
 
+            # load/store ops
+            self.attachment_load_ops[attachment_name] = wgpu.LoadOp.clear
+            self.attachment_store_ops[attachment_name] = wgpu.StoreOp.store
+
             # create texture for output texture
             if attachment_type == 'TextureOutput':
                 texture_size = attachment_width, attachment_height, 1
@@ -222,7 +228,7 @@ class RenderJob(object):
                 if self.type == 'Copy':
                     texture_usage |= wgpu.TextureUsage.COPY_DST
                 elif self.type == 'Compute':
-                    texture_usage |= wgpu.TextureUsage.STORAGE_BINDING
+                    texture_usage |= wgpu.TextureUsage.STORAGE_BINDING | wgpu.TextureUsage.COPY_DST
 
                 self.attachments[attachment_name] = device.create_texture(
                     size = texture_size,
@@ -238,6 +244,17 @@ class RenderJob(object):
                 self.attachment_formats[attachment_name] = attachment_format
 
                 self.output_size = attachment_width, attachment_height, 1 
+
+                # load op
+                if 'LoadOp' in info:
+                    if info['LoadOp'] == 'Load':
+                        self.attachment_load_ops[attachment_name] = wgpu.LoadOp.load
+                
+                # store op
+                if 'StoreOp' in info:
+                    if info['StoreOp'] == 'Store':
+                        self.attachment_store_ops[attachment_name] = wgpu.StoreOp.store
+                    
 
             elif attachment_type == 'TextureInput':
                 # input texture
@@ -568,6 +585,9 @@ class RenderJob(object):
             
             key = self.attachment_info[attachment_index]['Name']
             attachment_info = self.attachment_info[attachment_index]
+            format = wgpu.TextureFormat.rgba32float
+            if 'Format' in self.attachment_info[attachment_index] and self.attachment_info[attachment_index]['Format'] == 'rgba8unorm':
+                format = wgpu.TextureFormat.rgba8unorm
 
             # render target doesn't need binding
             if attachment_info['Type'] == 'TextureOutput':
@@ -585,7 +605,7 @@ class RenderJob(object):
                         "binding": num_input_attachments,
                         "visibility": shader_stage,
                         "storage_texture": {
-                            "format": wgpu.TextureFormat.rgba32float,
+                            "format": format,
                             "view_dimension": wgpu.TextureViewDimension.d2,
                             "access": wgpu.StorageTextureAccess.write_only
                         }
@@ -716,7 +736,7 @@ class RenderJob(object):
                 # binding layout
                 bind_group_layout_info = {
                     "binding": num_input_attachments,
-                    "visibility": wgpu.ShaderStage.COMPUTE,
+                    "visibility": wgpu.ShaderStage.COMPUTE | wgpu.ShaderStage.FRAGMENT,
                     "buffer": {
                         "type": wgpu.BufferBindingType.storage
                     }
