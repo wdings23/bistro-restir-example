@@ -47,7 +47,7 @@ struct HashEntry
 {
     miPageCoordinate: u32,
     miPageIndex: u32,
-    miMIP: u32,
+    miTextureIDAndMIP: u32,
     miUpdateFrame: u32,
 };
 
@@ -271,11 +271,12 @@ fn cs_main(
             );
 
             // output page info
+            let iMIPEncodedCoordinate: u32 = u32(u32(mipStartPageUV.x) | u32(u32(mipStartPageUV.y) << 16u));
             textureStore(
                 texturePageInfoTexture,
                 vec2<i32>(i32(uv.x * f32(defaultUniformData.miScreenWidth)), i32(uv.y * f32(defaultUniformData.miScreenHeight))),
                 vec4<f32>(
-                    f32(mipStartPageUV.x),
+                    f32(iMIPEncodedCoordinate),
                     f32(mipStartPageUV.y),
                     f32(iAlbedoTextureID) + f32(iMIP) * 0.1f,
                     f32(iAlbedoHashIndex)
@@ -289,7 +290,7 @@ fn cs_main(
                 vec4<f32>(
                     f32(mipNormalStartPageUV.x),
                     f32(mipNormalStartPageUV.y),
-                    f32(iNormalTextureID) + f32(iMIP) * 0.1f,
+                    f32(iNormalTextureID + 65536) + f32(iMIP) * 0.1f,
                     f32(iNormalHashIndex)
                 )
             );
@@ -306,7 +307,9 @@ fn registerTexturePage(
 {
     var iHashIndexCopy: u32 = iHashIndex;
 
-    let iBefore: u32 = atomicExchange(&aiUsedHashPages[iHashIndexCopy], 1u);
+    let iTextureAndMIP: u32 = (u32(iTextureID) << 24) | u32(iMIP);
+
+    let iBefore: u32 = atomicExchange(&aiUsedHashPages[iHashIndexCopy], iTextureID);
     if(iBefore <= 0u)
     {
         let iQueueIndex: i32 = atomicAdd(&aiCounters[0], 1); 
@@ -320,41 +323,52 @@ fn registerTexturePage(
 
         aPageHashTableMIP[iHashIndexCopy].miPageCoordinate = u32(u32(startPageUV.x) | u32(u32(startPageUV.y) << 16u));
         aPageHashTableMIP[iHashIndexCopy].miPageIndex = UINT32_MAX;
-        aPageHashTableMIP[iHashIndexCopy].miMIP = iMIP;
+        aPageHashTableMIP[iHashIndexCopy].miTextureIDAndMIP = iTextureAndMIP;
     }
     else 
     {
         let iMIPEncodedCoordinate: u32 = u32(u32(startPageUV.x) | u32(u32(startPageUV.y) << 16u));
-        if(aPageHashTableMIP[iHashIndexCopy].miPageCoordinate != iMIPEncodedCoordinate)
+        if(aPageHashTableMIP[iHashIndexCopy].miPageCoordinate != iMIPEncodedCoordinate || 
+           aPageHashTableMIP[iHashIndexCopy].miTextureIDAndMIP != iTextureAndMIP)
         {
+            // entry in has doesn't match, look for a new one
+
+            let iOrigHashIndex: u32 = u32(iHashIndexCopy);
             for(var i: u32 = 0u; i < 10000u; i++)
             {
                 iHashIndexCopy = (iHashIndexCopy + 1u) % 80000u;
                 
                 // found an existing entry 
-                if(aPageHashTableMIP[iHashIndexCopy].miPageCoordinate == iMIPEncodedCoordinate)
+                if(aPageHashTableMIP[iHashIndexCopy].miPageCoordinate == iMIPEncodedCoordinate && 
+                   aPageHashTableMIP[iHashIndexCopy].miTextureIDAndMIP == iTextureAndMIP)
                 {
                     break;
                 }
 
                 // register new entry if not found
-                let iBefore: u32 = atomicExchange(&aiUsedHashPages[iHashIndexCopy], 1u);
-                if(iBefore <= 0u)
+                if(aPageHashTableMIP[iHashIndexCopy].miPageCoordinate <= 0 &&
+                   aPageHashTableMIP[iHashIndexCopy].miPageIndex == 0 &&
+                   aPageHashTableMIP[iHashIndexCopy].miUpdateFrame == 0 &&
+                   aPageHashTableMIP[iHashIndexCopy].miTextureIDAndMIP == 0)
                 {
-                    let iQueueIndex: i32 = atomicAdd(&aiCounters[0], 1); 
-                    atomicAdd(&aiCounters[iMIP + 1], 1);
+                    let iBefore: u32 = atomicExchange(&aiUsedHashPages[iHashIndexCopy], iTextureID);
+                    if(iBefore <= 0u)
+                    {
+                        let iQueueIndex: i32 = atomicAdd(&aiCounters[0], 1); 
+                        atomicAdd(&aiCounters[iMIP + 1], 1);
+                        
+                        let iSignedEncodedCoordinateMIP: i32 = i32(i32(startPageUV.x) | i32(i32(startPageUV.y) << 16));
+                        aTexturePageQueueMIP[iQueueIndex].miPageUV = iSignedEncodedCoordinateMIP;
+                        aTexturePageQueueMIP[iQueueIndex].miTextureID = i32(iTextureID);
+                        aTexturePageQueueMIP[iQueueIndex].miHashIndex = i32(iHashIndexCopy);
+                        aTexturePageQueueMIP[iQueueIndex].miMIP = i32(iMIP);
 
-                    let iSignedEncodedCoordinateMIP: i32 = i32(i32(startPageUV.x) | i32(i32(startPageUV.y) << 16));
-                    aTexturePageQueueMIP[iQueueIndex].miPageUV = i32(iSignedEncodedCoordinateMIP);
-                    aTexturePageQueueMIP[iQueueIndex].miTextureID = i32(iTextureID);
-                    aTexturePageQueueMIP[iQueueIndex].miHashIndex = i32(iHashIndexCopy);
-                    aTexturePageQueueMIP[iQueueIndex].miMIP = i32(iMIP);
+                        aPageHashTableMIP[iHashIndexCopy].miPageCoordinate = u32(u32(startPageUV.x) | u32(u32(startPageUV.y) << 16u));
+                        aPageHashTableMIP[iHashIndexCopy].miPageIndex = UINT32_MAX;
+                        aPageHashTableMIP[iHashIndexCopy].miTextureIDAndMIP = iTextureAndMIP;
 
-                    aPageHashTableMIP[iHashIndexCopy].miPageCoordinate = iMIPEncodedCoordinate;
-                    aPageHashTableMIP[iHashIndexCopy].miPageIndex = UINT32_MAX;
-                    aPageHashTableMIP[iHashIndexCopy].miMIP = iMIP;
-
-                    break;
+                        break;
+                    }
                 }
             }
         }

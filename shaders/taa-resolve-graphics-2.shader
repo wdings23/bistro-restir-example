@@ -128,8 +128,8 @@ fn fs_main(in: VertexOutput) -> FragmentOutput
         textureSampler,
         in.texCoord
     );
-    clipSpaceDiff.x = clipSpaceDiff.x/* * 2.0f - 1.0f*/;
-    clipSpaceDiff.y = clipSpaceDiff.y/* * 2.0f - 1.0f*/; 
+    clipSpaceDiff.x = clipSpaceDiff.x;
+    clipSpaceDiff.y = clipSpaceDiff.y; 
 
     //let prevScreenUV: vec2<f32> = getPrevScreenUV(
     //    worldPosition.xyz,

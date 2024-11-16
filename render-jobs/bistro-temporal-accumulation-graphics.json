@@ -54,7 +54,7 @@
         {
             "Name" : "Radiance Output",
             "Type": "TextureInput",
-            "ParentJobName": "Temporal Restir Graphics"
+            "ParentJobName": "Spherical Harmonics Diffuse Graphics"
         },
         {
             "Name" : "Radiance Output",
@@ -64,7 +64,7 @@
         {
             "Name" : "Radiance Output",
             "Type": "TextureInput",
-            "ParentJobName": "Temporal Restir Specular Graphics"
+            "ParentJobName": "Spherical Harmonics Specular Graphics"
         },
 
         {
@@ -83,7 +83,7 @@
             "ParentJobName": "Bistro Example Copy"
         },
         {
-            "Name": "Previous Specular Temporal Restir Radiance Output",
+            "Name": "Previous Specular Filtered Radiance Output",
             "Type": "TextureInput",
             "ParentJobName": "Bistro Example Copy"
         },

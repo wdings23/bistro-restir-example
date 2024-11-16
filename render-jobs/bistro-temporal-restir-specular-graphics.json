@@ -110,8 +110,39 @@
             "Name": "Roughness Metalness Output",
             "Type": "TextureInput",
             "ParentJobName": "Deferred Indirect Offscreen Graphics"
-        }
+        },
 
+
+        {
+            "Name": "Spherical Harmonics 0",
+            "Type": "BufferOutput",
+            "Size": 4915200
+        },
+        {
+            "Name": "Spherical Harmonics 1",
+            "Type": "BufferOutput",
+            "Size": 4915200
+        },
+        {
+            "Name": "Spherical Harmonics 2",
+            "Type": "BufferOutput",
+            "Size": 4915200
+        },
+        {
+            "Name": "Previous Specular Spherical Harmonics 0",
+            "Type": "BufferInput",
+            "ParentJobName": "Bistro Example Copy"
+        },
+        {
+            "Name": "Previous Specular Spherical Harmonics 1",
+            "Type": "BufferInput",
+            "ParentJobName": "Bistro Example Copy"
+        },
+        {
+            "Name": "Previous Specular Spherical Harmonics 2",
+            "Type": "BufferInput",
+            "ParentJobName": "Bistro Example Copy"
+        }
 
     ],
     "ShaderResources": [
@@ -154,6 +185,5 @@
         "FillMode": "Solid",
         "CullMode": "None",
         "FrontFace": "CounterClockwise"
-    },
-    "UseGlobalTextures": "True"
+    }
 }

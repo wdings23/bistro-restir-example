@@ -273,43 +273,6 @@ fn fs_main(in: VertexOutput) -> FragmentOutput
     // ambient occlusion
     var fAO: f32 = smoothstep(0.0f, 1.0f, rayCount.z);
     
-    // small history size, use correct higher MIP for more samples 
-    if(indirectDiffuseRadianceHistory.w <= 10.0f)
-    {
-        let iMIPLevel: i32 = i32(
-            (1.0f - clamp(indirectDiffuseRadianceHistory.w / 10.0f, 0.0f, 1.0f)) * 3.0f
-        );
-
-        let ret: MIPTextureResult = sampleMIPTexture(
-            in.texCoord, 
-            prevScreenUV,
-            iMIPLevel, 
-            fOneOverScreenWidth,
-            fOneOverScreenHeight);
-        indirectDiffuseRadiance = ret.mIndirectDiffuseRadiance;
-        indirectDiffuseRadianceHistory = ret.mIndirectDiffuseRadianceHistory;
-        fAO = ret.mfAO;
-    }
-
-    // disoccluded
-    let bDisoccluded: bool = isDisoccluded2(in.texCoord, prevScreenUV);
-    if(bDisoccluded)
-    {
-        //indirectDiffuseRadiance = textureSample(
-        //    indirectDiffuseRadianceTexture,
-        //    textureSampler,
-        //    in.texCoord
-        //).xyz;
-
-        out.indirectDiffuseOutput = vec4<f32>(indirectDiffuseRadiance, 0.0f) * fAO;
-        out.indirectDiffuseMomentOutput = indirectDiffuseMoment;
-        out.directSunOutput = vec4<f32>(directSunRadiance, 0.0f) * fAO;
-        out.specularOutput = vec4<f32>(specularRadiance, 0.0f) * fAO;
-        out.debugOutput = vec4<f32>(fAO, fAO, fAO, 1.0f);
-
-        return out;
-    }
-
     let indirectDiffuseMomentHistory: vec4<f32> = textureSample(
         indirectDiffuseMomentHistoryTexture,
         textureSampler,
@@ -340,6 +303,58 @@ fn fs_main(in: VertexOutput) -> FragmentOutput
             minIndirectRadiance = min(minIndirectRadiance, radiance);
             maxIndirectRadiance = max(maxIndirectRadiance, radiance);
         }
+    }
+
+    // small history size, use correct higher MIP for more samples 
+    if(indirectDiffuseRadianceHistory.w <= 10.0f)
+    {
+        let iMIPLevel: i32 = i32(
+            (1.0f - clamp(indirectDiffuseRadianceHistory.w / 10.0f, 0.0f, 1.0f)) * 3.0f
+        );
+
+        // let ret: MIPTextureResult = sampleMIPTexture(
+        //     in.texCoord, 
+        //     prevScreenUV,
+        //     iMIPLevel, 
+        //     fOneOverScreenWidth,
+        //     fOneOverScreenHeight);
+        // indirectDiffuseRadiance = clamp(ret.mIndirectDiffuseRadiance, minIndirectRadiance, maxIndirectRadiance);
+        // indirectDiffuseRadianceHistory = ret.mIndirectDiffuseRadianceHistory;
+        
+        indirectDiffuseRadiance = textureSample(
+            indirectDiffuseRadianceTexture,
+            textureSampler,
+            in.texCoord
+        ).xyz;
+        
+        indirectDiffuseRadianceHistory = textureSample(
+            indirectDiffuseRadianceHistoryTexture,
+            textureSampler,
+            in.texCoord 
+        );
+
+        indirectDiffuseRadiance = clamp(indirectDiffuseRadiance, minIndirectRadiance, maxIndirectRadiance);
+        
+        //fAO = ret.mfAO;
+    }
+
+    // disoccluded
+    let bDisoccluded: bool = isDisoccluded2(in.texCoord, prevScreenUV);
+    if(bDisoccluded)
+    {
+        //indirectDiffuseRadiance = textureSample(
+        //    indirectDiffuseRadianceTexture,
+        //    textureSampler,
+        //    in.texCoord
+        //).xyz;
+
+        out.indirectDiffuseOutput = vec4<f32>(indirectDiffuseRadiance, 0.0f);
+        out.indirectDiffuseMomentOutput = indirectDiffuseMoment;
+        out.directSunOutput = vec4<f32>(directSunRadiance, 0.0f);
+        out.specularOutput = vec4<f32>(specularRadiance, 0.0f);
+        out.debugOutput = vec4<f32>(fAO, fAO, fAO, 1.0f);
+
+        return out;
     }
 
     var minDirectSunRadiance: vec3<f32> = vec3<f32>(FLT_MAX, FLT_MAX, FLT_MAX);
@@ -387,21 +402,18 @@ fn fs_main(in: VertexOutput) -> FragmentOutput
     }
 
     // mix previous to current radiance
-    indirectDiffuseRadiance *= fAO;
     let mixedIndirectDiffuseRadiance: vec3<f32> = mix(
         clamp(indirectDiffuseRadianceHistory.xyz, minIndirectRadiance, maxIndirectRadiance),
         indirectDiffuseRadiance,
         fAccumulationBlendWeight
     );
 
-    directSunRadiance *= fAO;
     let mixedDirectSunRadiance: vec3<f32> = mix(
         clamp(directSunRadianceHistory.xyz, minDirectSunRadiance, maxDirectSunRadiance),
         directSunRadiance.xyz,
         fAccumulationBlendWeight
     );
 
-    specularRadiance *= fAO;
     let mixedSpecularRadiance: vec3<f32> = mix(
         clamp(specularRadianceHistory.xyz, minSpecularRadiance, maxSpecularRadiance),
         specularRadiance.xyz,

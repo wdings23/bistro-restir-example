@@ -20,9 +20,9 @@
 
 
         {
-            "Name" : "Radiance Output",
+            "Name" : "Specular Radiance Output",
             "Type": "TextureInput",
-            "ParentJobName": "Temporal Restir Specular Graphics"
+            "ParentJobName": "Temporal Accumulation Graphics"
         },
         {
             "Name" : "World Position Output",

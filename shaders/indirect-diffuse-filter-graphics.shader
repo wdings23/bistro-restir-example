@@ -133,7 +133,7 @@ fn blur2(
     let kfPlaneThreshold: f32 = 0.5f;
     let kfPositionThreshold: f32 = 0.4f;
     let kfAngleThreshold: f32 = 0.9f;
-    var fRadius: f32 = 24.0f;
+    var fRadius: f32 = 32.0f;
 
     let textureSize: vec2<u32> = textureDimensions(blueNoiseTexture, 0);
     let iTotalTextureSize: u32 = textureSize.x * textureSize.y;

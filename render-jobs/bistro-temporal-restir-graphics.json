@@ -145,6 +145,43 @@
             "Name" : "Irradiance Cache",
             "Type": "BufferInput",
             "ParentJobName": "Build Irradiance Cache Compute"
+        },
+
+        {
+            "Name": "Spherical Harmonics 0",
+            "Type": "BufferOutput",
+            "Size": 4915200
+        },
+        {
+            "Name": "Spherical Harmonics 1",
+            "Type": "BufferOutput",
+            "Size": 4915200
+        },
+        {
+            "Name": "Spherical Harmonics 2",
+            "Type": "BufferOutput",
+            "Size": 4915200
+        },
+
+        {
+            "Name": "Previous Spherical Harmonics 0",
+            "Type": "BufferInput",
+            "ParentJobName": "Bistro Example Copy"
+        },
+        {
+            "Name": "Previous Spherical Harmonics 1",
+            "Type": "BufferInput",
+            "ParentJobName": "Bistro Example Copy"
+        },
+        {
+            "Name": "Previous Spherical Harmonics 2",
+            "Type": "BufferInput",
+            "ParentJobName": "Bistro Example Copy"
+        },
+        {
+            "Name" : "Initial Texture Atlas",
+            "Type": "TextureInput",
+            "ParentJobName": "Texture Page Queue Compute"
         }
 
     ],

@@ -28,6 +28,9 @@ var texture3: texture_2d<f32>;
 var texture4: texture_2d<f32>;
 
 @group(0) @binding(5)
+var texture5: texture_2d<f32>;
+
+@group(0) @binding(6)
 var textureSampler : sampler;
 
 struct UniformData
@@ -91,6 +94,13 @@ fn fs_main(in: VertexOutput) -> FragmentOutput {
     {
         radiance = textureSample(
             texture4, 
+            textureSampler, 
+            in.texCoord);
+    }
+    else if(uniformData.miOutputTextureID == 5u)
+    {
+        radiance = textureSample(
+            texture5, 
             textureSampler, 
             in.texCoord);
     }

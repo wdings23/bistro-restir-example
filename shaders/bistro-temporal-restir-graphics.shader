@@ -36,6 +36,12 @@ struct Material
     miEmissiveTextureID: u32,
 };
 
+struct SphericalHarmonicCoefficients
+{
+    mCoCg: vec2<f32>,
+    mY: vec4<f32>,
+};
+
 struct VertexInput {
     @location(0) pos : vec4<f32>,
     @location(1) texCoord: vec2<f32>,
@@ -216,6 +222,27 @@ var albedoTexture: texture_2d<f32>;
 var<storage, read> irradianceCache: array<IrradianceCacheEntry>;
 
 @group(0) @binding(17)
+var<storage, read_write> sphericalHarmonicCoefficient0: array<vec4<f32>>;
+
+@group(0) @binding(18)
+var<storage, read_write> sphericalHarmonicCoefficient1: array<vec4<f32>>;
+
+@group(0) @binding(19)
+var<storage, read_write> sphericalHarmonicCoefficient2: array<vec4<f32>>;
+
+@group(0) @binding(20)
+var<storage, read> prevSphericalHarmonicCoefficient0: array<vec4<f32>>;
+
+@group(0) @binding(21)
+var<storage, read> prevSphericalHarmonicCoefficient1: array<vec4<f32>>;
+
+@group(0) @binding(22)
+var<storage, read> prevSphericalHarmonicCoefficient2: array<vec4<f32>>;
+
+@group(0) @binding(23)
+var initialTextureAtlas: texture_2d<f32>;
+
+@group(0) @binding(24)
 var textureSampler: sampler;
 
 @group(1) @binding(0)
@@ -266,6 +293,15 @@ fn fs_main(in: VertexOutput) -> FragmentOutput
     var fReservoirSize: f32 = 8.0f;
 
     var out: FragmentOutput;
+
+
+    let iOutputX: i32 = i32(in.texCoord.x * f32(defaultUniformData.miScreenWidth));
+    let iOutputY: i32 = i32(in.texCoord.y * f32(defaultUniformData.miScreenHeight));
+    let iImageIndex: i32 = iOutputY * defaultUniformData.miScreenWidth + iOutputX;
+
+    sphericalHarmonicCoefficient0[iImageIndex] = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
+    sphericalHarmonicCoefficient1[iImageIndex] = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
+    sphericalHarmonicCoefficient2[iImageIndex] = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
 
     if(defaultUniformData.miFrame < 1)
     {
@@ -340,6 +376,8 @@ fn fs_main(in: VertexOutput) -> FragmentOutput
     result.mIntersectionResult.miHitTriangle = UINT32_MAX;
     result.mfNumValidSamples = 0.0f;
 
+    let prevRayDirection: vec3<f32> = normalize(result.mHitPosition.xyz - worldPosition.xyz);
+
     // more samples for disoccluded pixel
     var iNumCenterSamples: i32 = 1;
     if(fDisocclusion >= 1.0f/* || result.mReservoir.z <= 1.0f*/)
@@ -411,6 +449,7 @@ fn fs_main(in: VertexOutput) -> FragmentOutput
             normal,
             in.texCoord,
             sampleRayDirection,
+            prevRayDirection,
 
             fReservoirSize,
             1.0f,
@@ -549,6 +588,7 @@ fn fs_main(in: VertexOutput) -> FragmentOutput
             normal,
             sampleUV,
             sampleRayDirection,
+            prevRayDirection,
 
             fReservoirSize,
             fJacobian,
@@ -589,7 +629,6 @@ fn fs_main(in: VertexOutput) -> FragmentOutput
     out.hitPosition = result.mHitPosition;
     out.hitNormal = result.mHitNormal;
     
-
     return out;
 }
 
@@ -601,6 +640,7 @@ fn temporalRestir(
     normal: vec3<f32>,
     inputTexCoord: vec2<f32>,
     rayDirection: vec3<f32>,
+    prevRayDirection: vec3<f32>,
 
     fMaxTemporalReservoirSamples: f32,
     fJacobian: f32,
@@ -705,18 +745,15 @@ fn temporalRestir(
         var hitPosition: vec3<f32> = intersectionInfo.mHitPosition.xyz;
         
         // distance for on-screen radiance and ambient occlusion
-        var fDistance: f32 = length(hitPosition - worldPosition);
+        let diffPosition: vec3<f32> = hitPosition - worldPosition;
+        let fDistance: f32 = length(diffPosition);
         if(fDistance < defaultUniformData.mfAmbientOcclusionDistanceThreshold)
         {
             fAmbientOcclusionHit += 1.0f;
         }
 
-        fDistanceAttenuation = 1.0f / max(fDistance * fDistance, 1.0f);
-        if(fDistance < 1.0f)
-        {
-            fDistanceAttenuation = fDistance;
-        }
-
+        fDistanceAttenuation = 1.0f / max(dot(diffPosition, diffPosition), 1.0f);
+        
         // get on-screen radiance if there's any
         var clipSpacePosition: vec4<f32> = vec4<f32>(hitPosition, 1.0) * defaultUniformData.mViewProjectionMatrix;
         clipSpacePosition.x /= clipSpacePosition.w;
@@ -738,17 +775,13 @@ fn temporalRestir(
         hitPositionClipSpace.y = 1.0f - (hitPositionClipSpace.y * 0.5f + 0.5f);
         hitPositionClipSpace.z = hitPositionClipSpace.z * 0.5f + 0.5f;
 
+        let iHitMesh: u32 = u32(floor(worldSpaceHitPosition.w));
+
         let fDepthDiff: f32 = abs(hitPositionClipSpace.z - clipSpacePosition.z);
-
-        // albedo color of the hit mesh
-        //let iMaterialID: u32 = aMeshMaterialID[intersectionInfo.miMeshID];
-        //let material: Material = aMaterials[iMaterialID-1];
-        //let hitUV: vec2<f32> = intersectionInfo.mHitUV;
-        //albedoColor = getAlbedoColor(material, hitUV);
-
         if(clipSpacePosition.x >= 0.0f && clipSpacePosition.x <= 1.0f &&
            clipSpacePosition.y >= 0.0f && clipSpacePosition.y <= 1.0f && 
-           fDepthDiff <= 0.1f)
+           fDepthDiff <= 0.1f &&
+           iHitMesh == intersectionInfo.miMeshID)
         {
             // on screen
 
@@ -758,16 +791,15 @@ fn temporalRestir(
                 textureSampler,
                 prevOnScreenUV.xy);
 
-            // distance attenuation
-            let diff: vec3<f32> = hitPosition.xyz - worldPosition.xyz;
-            let fDistanceAttenuation: f32 = 1.0f / max(dot(diff, diff), 1.0f);
-            candidateRadiance *= fDistanceAttenuation;
-
             albedoColor = textureSample(
                 albedoTexture,
                 textureSampler,
                 prevOnScreenUV.xy
             ).xyz;
+
+            candidateRadiance.x *= 10.0f;
+            candidateRadiance.y *= 10.0f;
+            candidateRadiance.z *= 10.0f;
         }
         else 
         {
@@ -782,16 +814,46 @@ fn temporalRestir(
                 let irradianceCacheProbeRadiance: vec3<f32> = getRadianceFromIrradianceCacheProbe(
                     positionToCacheDirection, 
                     iHitIrradianceCacheIndex);
-                candidateRadiance.x = irradianceCacheProbeRadiance.x * fReflectivity;
-                candidateRadiance.y = irradianceCacheProbeRadiance.y * fReflectivity;
-                candidateRadiance.z = irradianceCacheProbeRadiance.z * fReflectivity;
+                candidateRadiance.x = irradianceCacheProbeRadiance.x; // * fReflectivity;
+                candidateRadiance.y = irradianceCacheProbeRadiance.y; // * fReflectivity;
+                candidateRadiance.z = irradianceCacheProbeRadiance.z; // * fReflectivity;
+
+                candidateRadiance.x *= 10.0f;
+                candidateRadiance.y *= 10.0f;
+                candidateRadiance.z *= 10.0f;
             }
+
+            let iMaterialID: u32 = aMeshMaterialID[intersectionInfo.miMeshID];
+            let material: Material = aMaterials[iMaterialID-1];
+            let iAlbedoTextureID: u32 = material.miAlbedoTextureID;
+
+            // albedo color of the hit mesh
+            albedoColor = getIntersectionTriangleAlbedo(
+                i32(intersectionInfo.miHitTriangle),
+                iAlbedoTextureID,
+                intersectionInfo.mBarycentricCoordinate);
         }
     }    
 
     candidateRadiance.x = candidateRadiance.x * fJacobian * fRadianceDP * fDistanceAttenuation * fOneOverPDF * albedoColor.x;
     candidateRadiance.y = candidateRadiance.y * fJacobian * fRadianceDP * fDistanceAttenuation * fOneOverPDF * albedoColor.y;
     candidateRadiance.z = candidateRadiance.z * fJacobian * fRadianceDP * fDistanceAttenuation * fOneOverPDF * albedoColor.z;
+    
+    if(iDisoccluded > 0)
+    {
+        ret.mReservoir.z = 0.0f;
+    }
+
+    if(bTraceRay)
+    {
+        encodeToSphericalHarmonicCoefficients(
+            candidateRadiance.xyz,
+            rayDirection,
+            inputTexCoord,
+            prevInputTexCoord,
+            iDisoccluded
+        );
+    }
     
     // reservoir
     let fLuminance: f32 = computeLuminance(
@@ -803,7 +865,7 @@ fn temporalRestir(
 
     var fPHat: f32 = clamp(fLuminance, 0.0f, 1.0f);
     var updateResult: ReservoirResult = updateReservoir(
-        prevResult.mReservoir,
+        ret.mReservoir,
         fPHat,
         fM,
         fRand2);
@@ -817,10 +879,6 @@ fn temporalRestir(
     
         ret.mHitUV = intersectionInfo.mHitUV;
         ret.miHitMesh = intersectionInfo.miMeshID;
-
-        ret.mRadiance.x *= albedoColor.x;
-        ret.mRadiance.y *= albedoColor.y;
-        ret.mRadiance.z *= albedoColor.z;
     }
 
     // clamp reservoir
@@ -837,6 +895,15 @@ fn temporalRestir(
 
     ret.mfNumValidSamples += fM * f32(fLuminance > 0.0f);
     
+    //if(albedoColor.x != 1.0f && albedoColor.y != 1.0f && albedoColor.z != 1.0f)
+    //{
+    //    ret.mRayDirection = vec4<f32>(albedoColor.xyz, 1.0f);
+    //}
+    //else 
+    //{
+    //    ret.mRayDirection = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
+    //}
+
     return ret;
 }
 
@@ -1602,7 +1669,7 @@ fn intersectTotalBVH4(
             let diff: vec3<f32> = aTLASBVHNodes[iTLASNodeIndex].mCentroid.xyz - ray.mOrigin.xyz;
             let fDistance: f32 = dot(diff, diff);
 
-            if(fDistance <= 5.0f)
+            if(fDistance <= 8.0f)
             {
                 var intersectBLASResult: IntersectBVHResult;
                 if(iBufferIndex == 0u)
@@ -1716,4 +1783,207 @@ fn getIrradianceCachePosition(
 ) -> vec4<f32>
 {
     return irradianceCache[iIrradianceCacheIndex].mPosition;
+}
+
+// https://media.contentapi.ea.com/content/dam/eacom/frostbite/files/gdc2018-precomputedgiobalilluminationinfrostbite.pdf
+// http://orlandoaguilar.github.io/sh/spherical/harmonics/irradiance/map/2017/02/12/SphericalHarmonics.html
+/////
+fn encodeToSphericalHarmonicCoefficients(
+    radiance: vec3<f32>,
+    direction: vec3<f32>,
+    texCoord: vec2<f32>,
+    prevTexCoord: vec2<f32>,
+    iDisoccluded: i32
+) 
+{
+    let iPrevOutputX: i32 = i32(prevTexCoord.x * f32(defaultUniformData.miScreenWidth));
+    let iPrevOutputY: i32 = i32(prevTexCoord.y * f32(defaultUniformData.miScreenHeight));
+    let iPrevImageIndex: i32 = iPrevOutputY * defaultUniformData.miScreenWidth + iPrevOutputX;
+
+    var SHCoefficent0: vec4<f32> = prevSphericalHarmonicCoefficient0[iPrevImageIndex];
+    var SHCoefficent1: vec4<f32> = prevSphericalHarmonicCoefficient1[iPrevImageIndex];
+    var SHCoefficent2: vec4<f32> = prevSphericalHarmonicCoefficient2[iPrevImageIndex];
+
+    if(iDisoccluded >= 1)
+    {
+        SHCoefficent0 = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
+        SHCoefficent1 = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
+        SHCoefficent2 = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
+    }
+
+    let afC: vec4<f32> = vec4<f32>(
+        0.282095f,
+        0.488603f,
+        0.488603f,
+        0.488603f
+    );
+    
+    let A: vec4<f32> = vec4<f32>(
+        0.886227f,
+        1.023326f,
+        1.023326f,
+        1.023326f
+    );
+
+    // encode coefficients with direction
+    let coefficient: vec4<f32> = vec4<f32>(
+        afC.x * A.x,
+        afC.y * direction.y * A.y,
+        afC.z * direction.z * A.z,
+        afC.w * direction.x * A.w
+    );
+
+    // encode with radiance
+    var aResults: array<vec3<f32>, 4>;
+    aResults[0] = radiance.xyz * coefficient.x;
+    aResults[1] = radiance.xyz * coefficient.y;
+    aResults[2] = radiance.xyz * coefficient.z;
+    aResults[3] = radiance.xyz * coefficient.w;
+
+    SHCoefficent0.x += aResults[0].x;
+    SHCoefficent0.y += aResults[0].y;
+    SHCoefficent0.z += aResults[0].z;
+    SHCoefficent0.w += aResults[1].x;
+
+    SHCoefficent1.x += aResults[1].y;
+    SHCoefficent1.y += aResults[1].z;
+    SHCoefficent1.z += aResults[2].x;
+    SHCoefficent1.w += aResults[2].y;
+
+    SHCoefficent2.x += aResults[2].z;
+    SHCoefficent2.y += aResults[3].x;
+    SHCoefficent2.z += aResults[3].y;
+    SHCoefficent2.w += aResults[3].z;
+
+    let iOutputX: i32 = i32(texCoord.x * f32(defaultUniformData.miScreenWidth));
+    let iOutputY: i32 = i32(texCoord.y * f32(defaultUniformData.miScreenHeight));
+    let iImageIndex: i32 = iOutputY * defaultUniformData.miScreenWidth + iOutputX;
+
+    sphericalHarmonicCoefficient0[iImageIndex] = SHCoefficent0;
+    sphericalHarmonicCoefficient1[iImageIndex] = SHCoefficent1;
+    sphericalHarmonicCoefficient2[iImageIndex] = SHCoefficent2;
+}
+
+
+
+/////
+fn clearSphericalHarmonicCoefficients(
+    texCoord: vec2<f32>
+)
+{
+    let iOutputX: i32 = i32(texCoord.x * f32(defaultUniformData.miScreenWidth));
+    let iOutputY: i32 = i32(texCoord.y * f32(defaultUniformData.miScreenHeight));
+    let iImageIndex: i32 = iOutputY * defaultUniformData.miScreenWidth + iOutputX;
+
+    sphericalHarmonicCoefficient0[iImageIndex] = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
+    sphericalHarmonicCoefficient1[iImageIndex] = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
+    sphericalHarmonicCoefficient2[iImageIndex] = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
+}
+
+// get uv on the triangle
+fn getIntersectionTriangleAlbedo(
+    iTriangleIndex: i32,
+    iTextureID: u32,
+    barycentricCoordinate: vec3<f32>) -> vec3<f32>
+{
+    let fInitialTextureAtlasSize: f32 = 512.0f;
+    let iInitialPageSize: i32 = 8;
+    let iNumInitialPagesPerRow: i32 = i32(fInitialTextureAtlasSize) / 8; 
+
+    let iIndex: u32 = u32(iTriangleIndex) * 3u;
+    let pos0: vec4<f32> = aVertexBuffer[aiIndexBuffer[iIndex]].mPosition;
+    let pos1: vec4<f32> = aVertexBuffer[aiIndexBuffer[iIndex + 1u]].mPosition;
+    let pos2: vec4<f32> = aVertexBuffer[aiIndexBuffer[iIndex + 2u]].mPosition;
+    let uv0: vec2<f32> = aVertexBuffer[aiIndexBuffer[iIndex]].mTexCoord.xy;
+    let uv1: vec2<f32> = aVertexBuffer[aiIndexBuffer[iIndex + 1u]].mTexCoord.xy;
+    let uv2: vec2<f32> = aVertexBuffer[aiIndexBuffer[iIndex + 2u]].mTexCoord.xy;
+    let uv: vec2<f32> = 
+        uv0 * barycentricCoordinate.x +
+        uv1 * barycentricCoordinate.y + 
+        uv2 * barycentricCoordinate.z;
+    
+    // get the uv difference from start of the page to current sample uv
+    var initialTextureDimension: vec2<i32> = vec2<i32>(iInitialPageSize, iInitialPageSize);
+    let initialImageCoord: vec2<i32> = vec2<i32>(
+        i32(uv.x * f32(initialTextureDimension.x)),
+        i32(uv.y * f32(initialTextureDimension.y))
+    );
+    let initialImagePageIndex: vec2<i32> = vec2<i32>(
+        initialImageCoord.x / iInitialPageSize,
+        initialImageCoord.y / iInitialPageSize
+    );
+    let initialStartPageImageCoord: vec2<i32> = vec2<i32>(
+        initialImagePageIndex.x * iInitialPageSize,
+        initialImagePageIndex.y * iInitialPageSize
+    ); 
+    let initialImageCoordDiff: vec2<i32> = initialImageCoord - initialStartPageImageCoord;
+    
+    // uv of the page in the atlas
+    // page x, y
+    let iInitialAtlasPageX: i32 = i32(iTextureID) % iNumInitialPagesPerRow;
+    let iInitialAtlasPageY: i32 = i32(iTextureID) / iNumInitialPagesPerRow;
+    
+    // atlas uv
+    let iInitialAtlasX: i32 = iInitialAtlasPageX * iInitialPageSize;
+    let iInitialAtlasY: i32 = iInitialAtlasPageY * iInitialPageSize;
+    let initialAtlasUV: vec2<f32> = vec2<f32>(
+        f32(iInitialAtlasX + initialImageCoordDiff.x) / fInitialTextureAtlasSize,
+        f32(iInitialAtlasY + initialImageCoordDiff.y) / fInitialTextureAtlasSize 
+    );
+
+    let ret: vec4<f32> = textureSampleLevel(
+        initialTextureAtlas,
+        textureSampler,
+        initialAtlasUV,
+        0.0f
+    );
+
+    return ret.xyz;
+}
+
+
+
+/////
+fn encodeToSphericalHarmonicCoefficients2(
+    color: vec3<f32>,
+    direction: vec3<f32>,
+) -> SphericalHarmonicCoefficients
+{
+    var ret: SphericalHarmonicCoefficients;
+
+    let fCo: f32 = color.r - color.b;
+    let fT: f32 = color.b + fCo * 0.5f;
+    let fCg: f32 = color.b - fT;
+    let fY: f32 = max(fT + fCg * 0.5f, 0.0f);
+
+    ret.mCoCg = vec2<f32>(fCo, fCg);
+    
+    let fL00 = 0.282095f;
+    let fL1_1 = 0.48603f * direction.y;
+    let fL10 = 0.48603f * direction.z;
+    let fL11 = 0.48603f * direction.x;
+
+    ret.mY = vec4<f32>(fL11, fL1_1, fL10, fL00) * fY;
+
+    return ret;
+}
+
+/////
+fn decodeSphericalHarmonicCoefficients2(
+    coefficents: SphericalHarmonicCoefficients,
+    direction: vec3<f32>
+) -> vec3<f32>
+{
+    let fD = dot(coefficents.mY.xyz, direction);
+    var fY: f32 = 2.0f * (1.023326f * fD + 0.886226f * coefficents.mY.w);
+    fY = max(fY, 0.0f);
+
+    let CoCg: vec2<f32> = coefficents.mCoCg * 0.282095f * fY / (coefficents.mY.w + 1.0e-6f);
+
+    let fT: f32 = fY - CoCg.y * 0.5f;
+    let fGreen: f32 = CoCg.y + fT;
+    let fBlue: f32 = fT - CoCg.x * 0.5f;
+    let fRed: f32 = fBlue + CoCg.x;
+
+    return max(vec3<f32>(fRed, fGreen, fBlue), vec3<f32>(0.0f, 0.0f, 0.0f));
 }

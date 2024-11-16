@@ -483,7 +483,7 @@ fn updateIrradianceCache(
         // get hit mesh
         let iMaterialID: u32 = aMeshMaterialID[intersectionInfo.miMeshID];
         let material: Material = aMaterials[iMaterialID-1];
-        let iAlbedoTextureID: u32 = material.miAlbedoTextureID;
+        //let iAlbedoTextureID: u32 = material.miAlbedoTextureID;
         cacheRadiance += material.mEmissive.xyz;
 
         // hit another mesh triangle, get the irradiance cache in the vicinity
@@ -499,11 +499,11 @@ fn updateIrradianceCache(
         cacheRadiance += getRadianceFromIrradianceCacheProbe(ray.mDirection.xyz * -1.0f, iHitIrradianceCacheIndex) * fRadianceDP;
 
         // albedo color of the hit mesh
-        let albedoColor: vec4<f32> = getIntersectionTriangleAlbedo(
-            iHitTriangleIndex,
-            iAlbedoTextureID,
-            intersectionInfo.mBarycentricCoordinate);
-        cacheRadiance *= albedoColor.xyz;
+        //let albedoColor: vec4<f32> = getIntersectionTriangleAlbedo(
+        //    iHitTriangleIndex,
+        //    iAlbedoTextureID,
+        //    intersectionInfo.mBarycentricCoordinate);
+        //cacheRadiance *= albedoColor.xyz;
 
         // update irradiance cache probe with the radiance and ray direction 
         updateIrradianceCacheProbe(

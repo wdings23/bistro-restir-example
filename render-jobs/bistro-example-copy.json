@@ -115,6 +115,58 @@
             "ParentJobName": "Diffuse Filter Graphics",
             "ParentName": "Filtered Output",
             "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Specular Filtered Radiance Output",
+            "Type": "TextureOutput",
+            "ParentJobName": "Specular Filter Graphics",
+            "ParentName": "Filtered Output",
+            "Format": "rgba32float"
+        },
+
+
+        {
+            "Name": "Previous Spherical Harmonics 0",
+            "Type": "BufferOutput",
+            "ParentJobName": "Temporal Restir Graphics",
+            "ParentName": "Spherical Harmonics 0",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Spherical Harmonics 1",
+            "Type": "BufferOutput",
+            "ParentJobName": "Temporal Restir Graphics",
+            "ParentName": "Spherical Harmonics 1",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Spherical Harmonics 2",
+            "Type": "BufferOutput",
+            "ParentJobName": "Temporal Restir Graphics",
+            "ParentName": "Spherical Harmonics 2",
+            "Format": "rgba32float"
+        },
+
+        {
+            "Name": "Previous Specular Spherical Harmonics 0",
+            "Type": "BufferOutput",
+            "ParentJobName": "Temporal Restir Specular Graphics",
+            "ParentName": "Spherical Harmonics 0",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Specular Spherical Harmonics 1",
+            "Type": "BufferOutput",
+            "ParentJobName": "Temporal Restir Specular Graphics",
+            "ParentName": "Spherical Harmonics 1",
+            "Format": "rgba32float"
+        },
+        {
+            "Name": "Previous Specular Spherical Harmonics 2",
+            "Type": "BufferOutput",
+            "ParentJobName": "Temporal Restir Specular Graphics",
+            "ParentName": "Spherical Harmonics 2",
+            "Format": "rgba32float"
         }
 
     ]

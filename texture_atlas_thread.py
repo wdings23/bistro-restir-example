@@ -27,6 +27,12 @@ def load_mip_texture_pages(
     # 8: overall total texture index for mip 1
     # 9: overall total texture index for mip 2
     
+    # page info
+    # 0: page x, y encoded
+    # 1: texture id
+    # 2: hash index
+    # 3: mip level 
+    
     texture_atlas_dimension = 8192
     texture_page_size = 64
     hash_entry_size = 16
@@ -99,88 +105,118 @@ def load_mip_texture_pages(
             
             # current page to load info
             page_info = mip_texture_page_info[key][curr_mip_load_texture_page[1]]
+            hash_index = page_info[2]
 
             # check if page has already been loaded
+            register_page_to_load = True
             hash_byte_pos = page_info[2] * 16
             page_index = struct.unpack('I', mip_texture_page_hash_bytes[hash_byte_pos+4:hash_byte_pos+8])[0]
-            if page_index != 0xffffffff:
-                if page_index < curr_mip_load_texture_page[2]:
-                    curr_mip_load_texture_page[1] += 1
-                    continue
-            
-            # load image
-            if image_loaded == False:
-                image = Image.open(texture_path, mode = 'r')
-                flipped_image = image.transpose(method = Image.Transpose.FLIP_TOP_BOTTOM)
-                mip_image_size = max(int(image.width / mip_denom), texture_page_size), max(int(image.height / mip_denom), texture_page_size)
-                mip_image = flipped_image.resize(mip_image_size)
-                if mip_image.mode == 'RGB':
-                    mip_image = mip_image.convert(mode = 'RGBA')
-                mip_image_bytes = mip_image.tobytes()
-                image_loaded = True
+            if page_index != 0xffffffff and page_index < curr_mip_load_texture_page[2]:
+                register_page_to_load = False
 
-            # load page image data
-            mip_page_image_bytes = load_texture_page_image_data(
-                texture_page_size = texture_page_size,
-                image_page_size = mip_image_page_size,
-                image_width = mip_texture_dimension[0],
-                page_info = page_info,
-                image_bytes = mip_image_bytes)
-            
-            if len(mip_page_image_bytes) <= 0:
-                length = len(mip_image_bytes)
+                if hash_index == 51316:
+                    print('!!! hash 51316 already loaded at page {} texture id {}'.format(page_index, texture_id))
+
+            # load image
+            if register_page_to_load == True:
+                if image_loaded == False:
+                    image = Image.open(texture_path, mode = 'r')
+                    flipped_image = image.transpose(method = Image.Transpose.FLIP_TOP_BOTTOM)
+                    mip_image_size = max(int(image.width / mip_denom), texture_page_size), max(int(image.height / mip_denom), texture_page_size)
+                    mip_image = flipped_image.resize(mip_image_size)
+                    if mip_image.mode == 'RGB':
+                        mip_image = mip_image.convert(mode = 'RGBA')
+                    mip_image_bytes = mip_image.tobytes()
+                    image_loaded = True
+
+                # load page image data
                 mip_page_image_bytes = load_texture_page_image_data(
                     texture_page_size = texture_page_size,
                     image_page_size = mip_image_page_size,
                     image_width = mip_texture_dimension[0],
                     page_info = page_info,
                     image_bytes = mip_image_bytes)
+                
+                if len(mip_page_image_bytes) <= 0:
+                    length = len(mip_image_bytes)
+                    mip_page_image_bytes = load_texture_page_image_data(
+                        texture_page_size = texture_page_size,
+                        image_page_size = mip_image_page_size,
+                        image_width = mip_texture_dimension[0],
+                        page_info = page_info,
+                        image_bytes = mip_image_bytes)
 
-            # determine the atlas texture to copy into based on mip level and coordinate in the atlas texture
-            attachment_key = 'Texture Atlas ' + str(int(page_info[4]))
-            # page_data = mip_page_image_bytes
-            # copy_page_size = texture_page_size, texture_page_size, 1
-            # atlas_texture = app.render_job_dict['Texture Page Queue Compute'].attachments[attachment_key]
-            curr_mip_page = curr_mip_load_texture_page[mip_level+4]
-            mip_texture_atlas_x = int((curr_mip_page % num_pages_per_dimension) * texture_page_size)
-            mip_texture_atlas_y = int(int(curr_mip_page / num_pages_per_dimension) * texture_page_size)
-            
-            # swap out old pages with the new one
-            hash_index = page_info[2]
-            swap_page_index = 0
-            if curr_mip_load_texture_page[mip_level+4] >= max_num_pages_per_texture:
-                for i in range(10000):
-                    hash_index = page_info[2] + i % 10000
-                    buffer_pos = hash_index * 16
-                    update_frame_index = struct.unpack('I', mip_texture_page_hash_bytes[buffer_pos+12:buffer_pos+16])[0]
-                    if update_frame_index > 0 and update_frame_index < app.frame_index - 50:
-                        swap_page_index = struct.unpack('I', mip_texture_page_hash_bytes[buffer_pos+4:buffer_pos+8])[0]
-                        if swap_page_index >= max_num_pages_per_texture:
-                            continue
-                        mip_texture_atlas_x = int(int(swap_page_index % num_pages_per_dimension) * texture_page_size)
-                        mip_texture_atlas_y = int(int(swap_page_index / num_pages_per_dimension) * texture_page_size)
-                        break
+                # determine the atlas texture to copy into based on mip level and coordinate in the atlas texture
+                attachment_key = 'Texture Atlas ' + str(int(page_info[4]))
+                curr_mip_page = curr_mip_load_texture_page[mip_level+4]
+                mip_texture_atlas_x = int((curr_mip_page % num_pages_per_dimension) * texture_page_size)
+                mip_texture_atlas_y = int(int(curr_mip_page / num_pages_per_dimension) * texture_page_size)
+                
+                # swap out old pages with the new one
+                swap_page_index = 0
+                if curr_mip_load_texture_page[mip_level+4] >= max_num_pages_per_texture:
+                   
+                    last_used_page_index = -1
+                    earliest_frame_accessed = app.frame_index
+                    num_candidate_swap_index = 0
+                    for i in range(5000):
+                        hash_index = (page_info[2] + i) % 5000
+                        buffer_pos = hash_index * 16
+                        update_frame_index = struct.unpack('I', mip_texture_page_hash_bytes[buffer_pos+12:buffer_pos+16])[0]
+                        if update_frame_index > 0 and update_frame_index < app.frame_index - min(50, app.frame_index):
+                            swap_page_index = struct.unpack('I', mip_texture_page_hash_bytes[buffer_pos+4:buffer_pos+8])[0]
+                            if swap_page_index >= max_num_pages_per_texture:
+                                continue
 
-            if len(mip_image_bytes) <= 0:
-                print('wtf')
+                            if earliest_frame_accessed > update_frame_index:
+                                earliest_frame_accessed = update_frame_index
+                                last_used_page_index = swap_page_index
+                                num_candidate_swap_index += 1
+                            
+                            if num_candidate_swap_index >= 5:
+                                break
+                            
+                    if earliest_frame_accessed < app.frame_index and last_used_page_index >= 0:
+                        mip_texture_atlas_x = int(int(last_used_page_index % num_pages_per_dimension) * texture_page_size)
+                        mip_texture_atlas_y = int(int(last_used_page_index / num_pages_per_dimension) * texture_page_size)
 
-            app.copy_texture_pages.append(
-                {
-                    'attachment-key': attachment_key,
-                    'x': mip_texture_atlas_x,
-                    'y': mip_texture_atlas_y,
-                    'image-bytes': mip_page_image_bytes,
-                    'hash-index': hash_index,
-                    'curr-mip-page-index': curr_mip_load_texture_page[mip_level+4] + 1
-                }
-            )
+                        if hash_index == 51316 or hash_index == 3960:
+                            print('!!! SWAP OUT {} !!!'.format(hash_index))
 
-            # update mip texture page in mip level
-            curr_mip_load_texture_page[mip_level+4] += 1
+                #if mip_level == 2:
+                #    print('mip 2 page {}'.format(curr_mip_load_texture_page[mip_level+4]))
 
-            # update mip texture index for mip level
-            if curr_mip_load_texture_page[mip_level+4] >= max_num_pages_per_texture:
-                curr_mip_load_texture_page[mip_level+7] += 1
+                encoded = int(mip_texture_atlas_x / texture_page_size) | int(int(mip_texture_atlas_y / texture_page_size) << 16)
+                if hash_index == 3960 or hash_index == 51316:
+                    print('wtf hash index {} texture id {} ({}, {}) mip page index {} mip {}'.format(
+                        hash_index,
+                        texture_id, 
+                        mip_texture_atlas_x, 
+                        mip_texture_atlas_y, 
+                        curr_mip_load_texture_page[mip_level+4] + 1,
+                        mip_level))
+
+                if len(mip_image_bytes) <= 0:
+                    print('wtf')
+
+                if mip_texture_atlas_x < texture_atlas_dimension and mip_texture_atlas_y < texture_atlas_dimension:
+                    app.copy_texture_pages.append(
+                        {
+                            'attachment-key': attachment_key,
+                            'x': mip_texture_atlas_x,
+                            'y': mip_texture_atlas_y,
+                            'image-bytes': mip_page_image_bytes,
+                            'hash-index': hash_index,
+                            'curr-mip-page-index': curr_mip_load_texture_page[mip_level+4] + 1
+                        }
+                    )
+
+                # update mip texture page in mip level
+                curr_mip_load_texture_page[mip_level+4] += 1
+
+                # update mip texture index for mip level
+                if curr_mip_load_texture_page[mip_level+4] >= max_num_pages_per_texture:
+                    curr_mip_load_texture_page[mip_level+7] += 1
 
             num_page_loaded += 1
             curr_mip_load_texture_page[1] += 1

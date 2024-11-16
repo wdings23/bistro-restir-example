@@ -502,7 +502,7 @@ class MyApp(object):
 
         num_normal_textures = struct.unpack('I', file_content[curr_pos:curr_pos+4])[0]
         curr_pos += 4
-        for i in range(num_albedo_textures):
+        for i in range(num_normal_textures):
             
             # texture file path
             texture_path_bytes = b''
@@ -516,7 +516,11 @@ class MyApp(object):
                 texture_path_bytes += char
             texture_path = texture_path_bytes.decode('utf-8')
             file_path = os.path.join(directory, texture_path)
-            self.normal_texture_paths.append(file_path)
+            base_name = os.path.basename(file_path)
+            extension_start = base_name.find('.')
+            base_name = base_name[:extension_start]
+            new_file_path = directory + 'converted-textures/normals-rgba/' + base_name + '.png'
+            self.normal_texture_paths.append(new_file_path)
 
     ##
     def init_data(self):
@@ -720,7 +724,7 @@ class MyApp(object):
 
         jitter_x = self.halton_sequence[self.frame_index % len(self.halton_sequence)][0]
         jitter_y = self.halton_sequence[self.frame_index % len(self.halton_sequence)][1]
-        self.jitter_scale = 0.7
+        self.jitter_scale = 1.0
         self.jitter = (jitter_x * self.jitter_scale, jitter_y * self.jitter_scale)
 
         jittered_perspective_projection_matrix = perspective_projection_matrix
@@ -1276,6 +1280,57 @@ class MyApp(object):
                 output_image = image.save(output_full_path)
 
     ##
+    def convert_normal_images(self):
+        for root, directories, files in os.walk('D:\\Downloads\\Bistro_v4\\Textures'):
+            for file in files:
+                if file.find('_Normal.dds') < 0:
+                    continue
+
+                full_path = os.path.join(root, file)
+                image = Image.open(full_path, 'r')
+
+                base_name_end = file.rfind('.')
+                base_name = file[:base_name_end]
+                output_full_path = 'd:\\Downloads\\Bistro_v4\\converted-textures\\normals\\' + base_name + '.png'
+                output_image = image.save(output_full_path)
+
+
+                #converted_image_bytes = b''
+                #image_bytes = image.tobytes()
+                #for y in range(image.height):
+                #    for x in range(image.width):
+                #        index = (y * image.width + x) * 3                
+                #        val0 = struct.unpack('B', image_bytes[index:index+1])[0]
+                #        val1 = struct.unpack('B', image_bytes[index+1:index+2])[0]
+                #        green = (val0 >> 4) / 15
+                #        blue = (val0 & 0x0f) / 15
+                #        red = (val1 >> 4) / 15
+                #        converted_image_bytes += struct.pack('B', int(red * 255.0))
+                #        converted_image_bytes += struct.pack('B', int(green * 255.0))
+                #        converted_image_bytes += struct.pack('B', int(blue * 255.0))
+                #        converted_image_bytes += struct.pack('B', 255)
+
+                '''
+                new_size = 64, 64
+                resized_image = image.resize(new_size)
+                for y in range(resized_image.height):
+                    for x in range(resized_image.width):
+                        pixel = resized_image.getpixel(xy = (x, y))
+                        red = (pixel[1] >> 4) / 15
+                        green_int = (pixel[0] >> 4)
+                        blue_int = (pixel[0] & 0x0f)
+                        green = green_int / 15
+                        blue = blue_int / 15
+
+                        image_bytes += struct.pack('B', int(red * 255.0))
+                        image_bytes += struct.pack('B', int(green * 255.0))
+                        image_bytes += struct.pack('B', int(blue * 255.0))
+
+                converted_image = Image.frombytes(mode = 'RGB', data = image_bytes, size = new_size)
+                converted_image.show()
+                '''
+
+    ##
     def load_scene_textures(
         self,
         texture_paths):
@@ -1286,57 +1341,8 @@ class MyApp(object):
         scale_image_size = 128
         for texture_path in texture_paths:
             image = Image.open(texture_path, mode = 'r')
-            
             texture_dimensions.append((image.width, image.height))
-
-            # scale down the image
-            flipped_image = None
-            if image.width >= scale_image_size or image.width >= scale_image_size:
-                scale_width = float(scale_image_size) / float(image.width)
-                scale_height = float(scale_image_size) / float(image.height)
-                scaled_image = image.resize((int(image.width * scale_width), int(image.height * scale_height)))
-                flipped_image = scaled_image.transpose(method = Image.Transpose.FLIP_TOP_BOTTOM)
-            else:     
-                flipped_image = image.transpose(method = Image.Transpose.FLIP_TOP_BOTTOM)
-
-            if image.mode != 'RGBA':    
-                image = flipped_image.convert(mode = 'RGBA')
-            else:
-                image = flipped_image
-                    
-            # create texture
-            image_byte_array = image.tobytes()
-            texture_width = image.width
-            texture_height = image.height
-            texture_size = texture_width, texture_height, 1
-            texture_format = wgpu.TextureFormat.rgba8unorm
-            texture = self.device.create_texture(
-                size=texture_size,
-                usage=wgpu.TextureUsage.COPY_DST | wgpu.TextureUsage.TEXTURE_BINDING,
-                dimension=wgpu.TextureDimension.d2,
-                format=texture_format,
-                mip_level_count=1,
-                sample_count=1,
-                label = texture_path
-            )
-            texture_array.append(texture)
-
-            # upload texture data
-            self.device.queue.write_texture(
-                {
-                    'texture': texture_array[len(texture_array) - 1],
-                    'mip_level': 0,
-                    'origin': (0, 0, 0),
-                },
-                image_byte_array,
-                {
-                    'offset': 0,
-                    'bytes_per_row': texture_width * 4
-                },
-                texture_size
-            )
-
-            texture_view_array.append(texture_array[len(texture_array) - 1].create_view())
+            image.close()
 
         return texture_array, texture_view_array, texture_dimensions
     
@@ -1564,7 +1570,8 @@ class MyApp(object):
                 atlas_texture_y = texture_page_info['y']
                 page_index = texture_page_info['curr-mip-page-index']
                 hash_index = texture_page_info['hash-index']
-                byte_position = hash_index * 16
+                hash_struct_size = 16
+                byte_position = hash_index * hash_struct_size
 
                 # copy texture page
                 if page_index < pages_per_dimension * pages_per_dimension:
@@ -1606,205 +1613,10 @@ class MyApp(object):
             self.texture_page_loaded = False
 
     ##
-    def load_mip_texture_pages(self):
-        # curr_mip_load_texture_page index mean:
-        # 0: original texture key index
-        # 1: page index in the current texture
-        # 2: overall total page index
-        # 3: total atlas texture index 
-        # 4: overall total page index mip 0 
-        # 5: overall total page index mip 1 
-        # 6: overall total page index mip 2 
-        # 7: overall total texture index for mip 0
-        # 8: overall total texture index for mip 1
-        # 9: overall total texture index for mip 2
-        
-        self.num_texture_pages_per_load = 384
-
-        texture_atlas_dimension = 8192
-        texture_page_size = 64
-        hash_entry_size = 16
-
-        num_pages_per_dimension = int(texture_atlas_dimension / texture_page_size)
-        max_num_pages_per_texture = int(num_pages_per_dimension * num_pages_per_dimension)
-
-        keys = list(self.mip_texture_page_info.keys())
-        num_keys = len(keys)
-        
-        mip_image = None
-        num_page_loaded = 0
-        while True:
-            # load texture
-
-            if mip_image != None:
-                mip_image.close()
-                mip_image = None
-
-            # past num pages in current texture
-            if self.curr_mip_load_texture_page[0] >= num_keys:
-                break
-            
-            # current image
-            key = keys[self.curr_mip_load_texture_page[0]]
-            page_info = self.mip_texture_page_info[key]
-            texture_id = page_info[0][3]
-            texture_path = self.albedo_texture_paths[texture_id]
-            mip_level = page_info[0][4]
-            #image = Image.open(texture_path, mode = 'r')
-            #flipped_image = image.transpose(method = Image.Transpose.FLIP_TOP_BOTTOM)
-            mip_denom = pow(2, mip_level)
-            #mip_image_size = int(image.width / mip_denom), int(image.height / mip_denom)
-            #mip_image = flipped_image.resize(mip_image_size)
-            #mip_image_bytes = mip_image.tobytes()
-            num_pages = len(self.mip_texture_page_info[key])    
-
-            # texture dimensions for mip level
-            texture_index = page_info[0][3]
-            #start_page_index = self.total_num_albedo_per_mip_texture[mip_level][texture_index]
-            texture_dimension = self.albedo_texture_dimensions[texture_index]
-            mip_texture_dimension = [0, 0]
-            mip_texture_dimension[0] = int(texture_dimension[0] / mip_denom)
-            mip_texture_dimension[1] = int(texture_dimension[1] / mip_denom)
-            #mip_image_page_size = int(min(mip_image.width / mip_denom, texture_page_size))
-            mip_image_page_size = int(min(texture_dimension[0] / mip_denom, texture_page_size))
-            num_page_x = int(mip_texture_dimension[0] / texture_page_size)
-            num_pages = len(self.mip_texture_page_info[key])
-            
-            image_loaded = False
-            mip_image_bytes = None
-
-            num_curr_texture_page_loaded = 0
-            while True:
-                # load pages from texture
-
-                # past number of pages to load per frame
-                if num_page_loaded >= self.num_texture_pages_per_load:
-                    break
-                
-                # move to next texture to load pages
-                if self.curr_mip_load_texture_page[1] >= num_pages:
-                    self.curr_mip_load_texture_page[0] += 1
-                    self.curr_mip_load_texture_page[1] = 0
-                    if mip_image != None:
-                        mip_image.close()
-                        mip_image = None
-
-                    break
-                
-                # current page to load info
-                page_info = self.mip_texture_page_info[key][self.curr_mip_load_texture_page[1]]
-
-                # check if page has already been loaded
-                hash_byte_pos = page_info[2] * 16
-                page_index = struct.unpack('I', self.mip_texture_page_hash_bytes[hash_byte_pos+4:hash_byte_pos+8])[0]
-                if page_index != 0xffffffff:
-                    if page_index < self.curr_mip_load_texture_page[2]:
-                        self.curr_mip_load_texture_page[1] += 1
-                        continue
-                
-                # load image
-                if image_loaded == False:
-                    image = Image.open(texture_path, mode = 'r')
-                    flipped_image = image.transpose(method = Image.Transpose.FLIP_TOP_BOTTOM)
-                    mip_image_size = int(image.width / mip_denom), int(image.height / mip_denom)
-                    mip_image = flipped_image.resize(mip_image_size)
-                    mip_image_bytes = mip_image.tobytes()
-                    image_loaded = True
-
-                # load page image data
-                mip_page_image_bytes = self.load_texture_page_image_data(
-                    image = mip_image, 
-                    texture_page_size = texture_page_size,
-                    image_page_size = mip_image_page_size,
-                    image_width = mip_texture_dimension[0],
-                    page_info = page_info,
-                    image_bytes = mip_image_bytes)
-                
-                # determine the atlas texture to copy into based on mip level and coordinate in the atlas texture
-                attachment_key = 'Texture Atlas ' + str(int(page_info[4]))
-                page_data = mip_page_image_bytes
-                copy_page_size = texture_page_size, texture_page_size, 1
-                atlas_texture = self.render_job_dict['Texture Page Queue Compute'].attachments[attachment_key]
-                curr_mip_page = self.curr_mip_load_texture_page[mip_level+4]
-                mip_texture_atlas_x = int((curr_mip_page % num_pages_per_dimension) * texture_page_size)
-                mip_texture_atlas_y = int(int(curr_mip_page / num_pages_per_dimension) * texture_page_size)
-                self.device.queue.write_texture(
-                    {
-                        'texture': atlas_texture,
-                        'mip_level': 0,
-                        'origin': (mip_texture_atlas_x, mip_texture_atlas_y, 0),
-                    },
-                    page_data,
-                    {
-                        'offset': 0,
-                        'bytes_per_row': texture_page_size * 4
-                    },
-                    copy_page_size
-                )
-
-                # update hash page index
-                hash_index = page_info[2]
-                byte_position = hash_index * hash_entry_size
-                self.mip_texture_page_hash_bytes[byte_position+4:byte_position+8] = struct.pack(
-                    'I', 
-                    self.curr_mip_load_texture_page[mip_level+4] + 1) 
-                
-                # update mip texture page in mip level
-                self.curr_mip_load_texture_page[2] += 1
-                self.curr_mip_load_texture_page[mip_level+4] += 1
-
-                # update mip texture index for mip level
-                if self.curr_mip_load_texture_page[mip_level+4] >= max_num_pages_per_texture:
-                    self.curr_mip_load_texture_page[mip_level+7] += 1
-
-                num_page_loaded += 1
-                self.curr_mip_load_texture_page[1] += 1
-
-            if num_page_loaded >= self.num_texture_pages_per_load:
-                if mip_image != None:
-                    mip_image.close()
-                    mip_image = None
-
-                break
-
-    ##
-    def load_texture_page_image_data(
-        self, 
-        image,
-        texture_page_size, 
-        image_page_size, 
-        image_width,
-        page_info,
-        image_bytes):
-
-        # load page row by row
-        page_image_bytes = b''
-        zero_byte = struct.pack('I', 0)
-        num_left_over = texture_page_size - image_page_size
-        for y in range(image_page_size):
-            coord_x = page_info[0]
-            coord_y = page_info[1] + y
-            start_index = (coord_y * image_width + coord_x) * 4
-            
-            page_image_bytes += image_bytes[start_index:start_index + image_page_size * 4]
-            
-            # padding
-            for i in range(num_left_over):
-                page_image_bytes += zero_byte
-
-        # row padding
-        for y in range(num_left_over):
-            for i in range(texture_page_size):
-                page_image_bytes += zero_byte
-
-        #test_image_size = texture_page_size, texture_page_size
-        #output_image = Image.frombytes(mode = 'RGBA', size = test_image_size, data = page_image_bytes)
-        #output_image.show()
-
-        return page_image_bytes
-
-    ##
     def load_initial_scaled_textures(self):
+
+        print('loading initial textures into atlas')
+        start_time = datetime.datetime.now()
 
         texture_dimension = 512
         page_size = 8
@@ -1876,6 +1688,8 @@ class MyApp(object):
                 texture_atlas_y += page_size
                 texture_atlas_x = 0
 
+        time_delta = datetime.datetime.now() - start_time
+        print('time to load: {} seconds'.format(time_delta.seconds))
 ##
 if __name__ == "__main__":
     app = MyApp()

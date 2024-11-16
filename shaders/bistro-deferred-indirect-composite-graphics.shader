@@ -131,16 +131,16 @@ fn fs_main(in: VertexOutput) -> FragmentOutput
     let fRoughness: f32 = roughMetal.x;
     let fMetalness: f32 = clamp(roughMetal.y, 0.1f, 0.7f);
 
-    let scaledDirectSunRaduance: vec3<f32> = directSunRadiance * 0.5f;
+    let scaledDirectSunRadiance: vec3<f32> = directSunRadiance * 0.5f;
 
-    let diffuse: vec3<f32> = (scaledDirectSunRaduance + indirectDiffuseRadiance) * (1.0f - fMetalness);
+    let diffuse: vec3<f32> = (scaledDirectSunRadiance + indirectDiffuseRadiance) * (1.0f - fMetalness);
     out.output = vec4<f32>(
-        (diffuse * material.xyz + specularRadiance.xyz * 2.0f * scaledDirectSunRaduance), // * ambientOcclusion.z, 
+        (diffuse * material.xyz + specularRadiance.xyz), // * ambientOcclusion.z, 
         1.0f
     );
 
     out.debug0 = vec4<f32>(directSunRadiance, 1.0f);
-    out.debug1 = vec4<f32>(indirectDiffuseRadiance, 1.0f);
+    out.debug1 = vec4<f32>(diffuse, 1.0f);
     out.debug2 = vec4<f32>(ambientOcclusion, 1.0f);
 
     return out;

@@ -85,6 +85,12 @@ struct Material
     miEmissiveTextureID: u32,
 };
 
+struct SphericalHarmonicCoefficients
+{
+    mCoCg: vec2<f32>,
+    mY: vec4<f32>,
+};
+
 struct DefaultUniformData
 {
     miScreenWidth: i32,
@@ -166,6 +172,24 @@ var hitUVAndMeshTexture: texture_2d<f32>;
 var roughMetalTexture: texture_2d<f32>;
 
 @group(0) @binding(17)
+var<storage, read_write> sphericalHarmonicCoefficient0: array<vec4<f32>>;
+
+@group(0) @binding(18)
+var<storage, read_write> sphericalHarmonicCoefficient1: array<vec4<f32>>;
+
+@group(0) @binding(19)
+var<storage, read_write> sphericalHarmonicCoefficient2: array<vec4<f32>>;
+
+@group(0) @binding(20)
+var<storage, read> prevSphericalHarmonicCoefficient0: array<vec4<f32>>;
+
+@group(0) @binding(21)
+var<storage, read> prevSphericalHarmonicCoefficient1: array<vec4<f32>>;
+
+@group(0) @binding(22)
+var<storage, read> prevSphericalHarmonicCoefficient2: array<vec4<f32>>;
+
+@group(0) @binding(23)
 var textureSampler: sampler;
 
 @group(1) @binding(0)
@@ -274,7 +298,7 @@ fn fs_main(in: VertexOutput) -> FragmentOutput
         iMesh,
         hitUVAndMesh.xy,
         u32(hitUVAndMesh.z),
-        max(roughMetal.y - 0.2f, 0.3f),
+        max(roughMetal.y - 0.1f, 0.3f),
         randomResult);
 
     // ambient occlusion
@@ -430,13 +454,26 @@ fn temporalRestirSpecular(
             1.0f,
             fRand);
     }
+
+    if(fRadianceDP >= 0.9f || updateResult.mbExchanged == true)
+    {
+        encodeToSphericalHarmonicCoefficients(
+            candidateRadiance.xyz / fSpecularConeDP,
+            sampleRayDirection,
+            texCoord,
+            prevScreenUV,
+            i32(bDisoccluded)
+        );
+    }
+
+
     // PBR
     if(updateResult.mbExchanged)
     {   
         var specularLight: vec3<f32> = vec3<f32>(0.0f, 0.0f, 0.0f);
         var kS: f32 = 0.0f;
         {
-            let fRoughness: f32 = 0.3f;     // temp for now
+            let fRoughness: f32 = 0.6f;     // temp for now
 
             let viewDir: vec3<f32> = normalize(defaultUniformData.mCameraPosition.xyz - worldPosition.xyz);
 
@@ -459,7 +496,7 @@ fn temporalRestirSpecular(
                 vec3<f32>(0.0f, 0.0f, 0.0f), 
                 vec3<f32>(1.0f, 1.0f, 1.0f));
 
-            specularLight = specular * candidateRadiance * max(dot(normal.xyz, lightDir.xyz), 0.0f);
+            specularLight = specular * candidateRadiance * max(dot(normal.xyz, lightDir.xyz), 0.0f) * 1.0f;
             kS = 1.0f - fresnel.x;
         }
 
@@ -874,4 +911,83 @@ fn isPrevUVOutOfBounds(inputTexCoord: vec2<f32>) -> bool
     let backProjectedScreenUV: vec2<f32> = inputTexCoord - motionVector.xy;
 
     return (backProjectedScreenUV.x < 0.0f || backProjectedScreenUV.x > 1.0 || backProjectedScreenUV.y < 0.0f || backProjectedScreenUV.y > 1.0f);
+}
+
+// https://media.contentapi.ea.com/content/dam/eacom/frostbite/files/gdc2018-precomputedgiobalilluminationinfrostbite.pdf
+// http://orlandoaguilar.github.io/sh/spherical/harmonics/irradiance/map/2017/02/12/SphericalHarmonics.html
+/////
+fn encodeToSphericalHarmonicCoefficients(
+    radiance: vec3<f32>,
+    direction: vec3<f32>,
+    texCoord: vec2<f32>,
+    prevTexCoord: vec2<f32>,
+    iDisoccluded: i32
+) 
+{
+    let iPrevOutputX: i32 = i32(prevTexCoord.x * f32(defaultUniformData.miScreenWidth));
+    let iPrevOutputY: i32 = i32(prevTexCoord.y * f32(defaultUniformData.miScreenHeight));
+    let iPrevImageIndex: i32 = iPrevOutputY * defaultUniformData.miScreenWidth + iPrevOutputX;
+
+    var SHCoefficent0: vec4<f32> = prevSphericalHarmonicCoefficient0[iPrevImageIndex];
+    var SHCoefficent1: vec4<f32> = prevSphericalHarmonicCoefficient1[iPrevImageIndex];
+    var SHCoefficent2: vec4<f32> = prevSphericalHarmonicCoefficient2[iPrevImageIndex];
+
+    if(iDisoccluded >= 1)
+    {
+        SHCoefficent0 = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
+        SHCoefficent1 = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
+        SHCoefficent2 = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
+    }
+
+    let afC: vec4<f32> = vec4<f32>(
+        0.282095f,
+        0.488603f,
+        0.488603f,
+        0.488603f
+    );
+    
+    let A: vec4<f32> = vec4<f32>(
+        0.886227f,
+        1.023326f,
+        1.023326f,
+        1.023326f
+    );
+
+    // encode coefficients with direction
+    let coefficient: vec4<f32> = vec4<f32>(
+        afC.x * A.x,
+        afC.y * direction.y * A.y,
+        afC.z * direction.z * A.z,
+        afC.w * direction.x * A.w
+    );
+
+    // encode with radiance
+    var aResults: array<vec3<f32>, 4>;
+    aResults[0] = radiance.xyz * coefficient.x;
+    aResults[1] = radiance.xyz * coefficient.y;
+    aResults[2] = radiance.xyz * coefficient.z;
+    aResults[3] = radiance.xyz * coefficient.w;
+
+    SHCoefficent0.x += aResults[0].x;
+    SHCoefficent0.y += aResults[0].y;
+    SHCoefficent0.z += aResults[0].z;
+    SHCoefficent0.w += aResults[1].x;
+
+    SHCoefficent1.x += aResults[1].y;
+    SHCoefficent1.y += aResults[1].z;
+    SHCoefficent1.z += aResults[2].x;
+    SHCoefficent1.w += aResults[2].y;
+
+    SHCoefficent2.x += aResults[2].z;
+    SHCoefficent2.y += aResults[3].x;
+    SHCoefficent2.z += aResults[3].y;
+    SHCoefficent2.w += aResults[3].z;
+
+    let iOutputX: i32 = i32(texCoord.x * f32(defaultUniformData.miScreenWidth));
+    let iOutputY: i32 = i32(texCoord.y * f32(defaultUniformData.miScreenHeight));
+    let iImageIndex: i32 = iOutputY * defaultUniformData.miScreenWidth + iOutputX;
+
+    sphericalHarmonicCoefficient0[iImageIndex] = SHCoefficent0;
+    sphericalHarmonicCoefficient1[iImageIndex] = SHCoefficent1;
+    sphericalHarmonicCoefficient2[iImageIndex] = SHCoefficent2;
 }

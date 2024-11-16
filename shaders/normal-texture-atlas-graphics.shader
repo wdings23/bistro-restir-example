@@ -87,7 +87,7 @@ fn fs_main(in: VertexOutput) -> FragmentOutput {
         in.texCoord.xy
     );
 
-    let localNormalTextureColor: vec4<f32> = textureSample(
+    var localNormalTextureColor: vec4<f32> = textureSample(
         localNormalTexture,
         textureSampler,
         in.texCoord.xy
@@ -101,8 +101,6 @@ fn fs_main(in: VertexOutput) -> FragmentOutput {
     let tangent: vec3<f32> = normalize(cross(up, normal.xyz));
     let binormal: vec3<f32> = normalize(cross(normal.xyz, tangent));
 
-    let fPhi: f32 = (localNormalTextureColor.x * 2.0f - 1.0f) * PI; 
-    let fTheta: f32 = localNormalTextureColor.y * 2.0f * PI;
     
     if(localNormalTextureColor.w < 1.0f)
     {
@@ -111,20 +109,26 @@ fn fs_main(in: VertexOutput) -> FragmentOutput {
     else
     {
         out.mLocalNormal = vec4<f32>(
-            sin(fPhi) * cos(fTheta),
-            sin(fPhi) * sin(fTheta),
-            cos(fPhi),
+            localNormalTextureColor.x,
+            localNormalTextureColor.y,
+            localNormalTextureColor.z, 
             1.0f
         );
     }
 
-    let sampleNormal: vec3<f32> = normalize(tangent * out.mLocalNormal.x + binormal * out.mLocalNormal.y + normal.xyz * out.mLocalNormal.z);
+    let convertedNormal: vec3<f32> = vec3<f32>(
+        localNormalTextureColor.x * 2.0f - 1.0f,
+        localNormalTextureColor.y * 2.0f - 1.0f,
+        localNormalTextureColor.z * 2.0f - 1.0f, 
+    );
+
+    let sampleNormal: vec3<f32> = normalize(tangent * convertedNormal.x + binormal * convertedNormal.y + normal.xyz * convertedNormal.z);
     out.mWorldNormal = vec4<f32>(
         sampleNormal.xyz,
         1.0f
     );
 
-    if(localNormalTextureColor.w < 1.0f)
+    //if(localNormalTextureColor.w < 1.0f)
     {
         out.mWorldNormal = vec4<f32>(
             normal.xyz,

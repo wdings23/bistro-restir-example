@@ -24,9 +24,14 @@
             "ParentJobName": "Texture Atlas Graphics"
         },
         {
-            "Name" : "Normal Output",
+            "Name" : "Radiance Output",
             "Type": "TextureInput",
-            "ParentJobName": "Normal Texture Atlas Graphics"
+            "ParentJobName": "Spherical Harmonics Specular Graphics"
+        },
+        {
+            "Name" : "Radiance Output",
+            "Type": "TextureInput",
+            "ParentJobName": "Spherical Harmonics Diffuse Graphics"
         }
         
     ],

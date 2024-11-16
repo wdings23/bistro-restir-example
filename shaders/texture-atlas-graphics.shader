@@ -61,7 +61,7 @@ struct HashEntry
 {
     miPageCoordinate: u32,
     miPageIndex: u32,
-    miMIP: u32,
+    miTextureIDAndMIP: u32,
     miUpdateFrame: u32,
 };
 
@@ -157,10 +157,12 @@ fn fs_main(in: VertexOutput) -> FragmentOutput {
     out.mDebug3 = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
     out.mDebug4 = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
 
-    out.mDebug3 = outputTextureMIP(
+    out.mAlbedo = outputTextureMIP(
         in.texCoord, 
         0u
     ).mColor;
+
+    out.mDebug3 = out.mAlbedo;
 
     let retNormal: TextureAtlasOutput  = outputTextureMIP(
         in.texCoord, 
@@ -168,11 +170,7 @@ fn fs_main(in: VertexOutput) -> FragmentOutput {
     );
 
     out.mDebug0 = retNormal.mColor;
-    if(retNormal.mbLoaded == false)
-    {
-        out.mDebug0 = vec4<f32>(0.5f, 0.5f, 0.0f, 1.0f);
-    }
-
+    
     return out;
 }
 
@@ -214,7 +212,7 @@ fn outputTextureMIP(
     let iTextureIDMIP: i32 = i32(ceil(pageInfoMIP.z - 0.5f));
     let iHashIndexMIP: i32 = i32(ceil(pageInfoMIP.w - 0.5f));
     var iPageIndexMIP: i32 = i32(aPageHashTableMIP[iHashIndexMIP].miPageIndex);
-    let iMIP: u32 = aPageHashTableMIP[iHashIndexMIP].miMIP;
+    let iMIP: u32 = aPageHashTableMIP[iHashIndexMIP].miTextureIDAndMIP & 0xf;
 
     if(u32(iPageIndexMIP) == 0xffffffffu)
     {
@@ -256,6 +254,11 @@ fn outputTextureMIP(
             initialTextureAtlas,
             textureSampler,
             initialAtlasUV);
+
+        if(iTextureType == 1u)
+        {
+            ret.mColor = vec4<f32>(0.5f, 0.5f, 1.0f, 1.0f);
+        }
 
         return ret; // * vec4<f32>(1.0f, 0.2f, 0.2f, 1.0f);
     }
@@ -319,6 +322,7 @@ fn outputTextureMIP(
         );
 
         // sample atlas texture based on MIP index
+        ret.mColor = vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f);
         if(iMIP == 0)
         {
             ret.mColor = textureSample(
@@ -327,6 +331,7 @@ fn outputTextureMIP(
                 atlasUV
             );
 
+/*
             ret.mColor += textureSample(
                 atlasTexture0,
                 textureSampler,
@@ -351,7 +356,8 @@ fn outputTextureMIP(
                 atlasUV3
             );
 
-            ret.mColor *= 0.2f;
+            ret.mColor *= 0.25f;
+*/
         }
         else if(iMIP == 1)
         {
@@ -360,7 +366,7 @@ fn outputTextureMIP(
                 textureSampler,
                 atlasUV
             );
-
+/*
             ret.mColor += textureSample(
                 atlasTexture1,
                 textureSampler,
@@ -385,7 +391,8 @@ fn outputTextureMIP(
                 atlasUV3
             );
 
-            ret.mColor *= 0.2f;
+            ret.mColor *= 0.25f;
+*/
         }
         else if(iMIP == 2)
         {
@@ -395,6 +402,7 @@ fn outputTextureMIP(
                 atlasUV
             );
 
+/*
             ret.mColor += textureSample(
                 atlasTexture2,
                 textureSampler,
@@ -419,7 +427,8 @@ fn outputTextureMIP(
                 atlasUV3
             );
 
-            ret.mColor *= 0.2f;
+            ret.mColor *= 0.25f;
+*/
         }
         else if(iMIP == 3)
         {
@@ -429,6 +438,7 @@ fn outputTextureMIP(
                 atlasUV
             );
 
+/*
             ret.mColor += textureSample(
                 atlasTexture3,
                 textureSampler,
@@ -453,7 +463,8 @@ fn outputTextureMIP(
                 atlasUV3
             );
 
-            ret.mColor *= 0.2f;
+            ret.mColor *= 0.25f;
+*/
         }
 
         // mark page as active
@@ -462,3 +473,4 @@ fn outputTextureMIP(
 
     return ret;
 }
+

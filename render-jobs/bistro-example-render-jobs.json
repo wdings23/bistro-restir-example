@@ -135,6 +135,21 @@
             "Type": "Graphics",
             "PassType": "Full Triangle"
         },
+
+        {
+            "Name": "Spherical Harmonics Diffuse Graphics",
+            "Pipeline": "spherical-harmonics-diffuse-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+        {
+            "Name": "Spherical Harmonics Specular Graphics",
+            "Pipeline": "spherical-harmonics-specular-graphics.json",
+            "Type": "Graphics",
+            "PassType": "Full Triangle"
+        },
+
+
         {
             "Name": "Indirect Diffuse MIP Map 0 Graphics",
             "Pipeline": "bistro-mip-map-0-graphics.json",

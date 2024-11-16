@@ -28,7 +28,7 @@
         {
             "Name" : "Radiance Output",
             "Type": "TextureInput",
-            "ParentJobName": "Temporal Restir Graphics"
+            "ParentJobName": "Spherical Harmonics Diffuse Graphics"
         },
         {
             "Name" : "Indirect Diffuse Radiance Output",
